@@ -1,5 +1,7 @@
 package org.example;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,8 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void save(User user) {
+        String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
+        user.setPassword(hashedPassword);
         users.add(user);
     }
 

@@ -10,7 +10,6 @@ class Car extends Vehicle {
         System.out.println(this.toString());
     }
 
-
     @Override
     public void save() {
 

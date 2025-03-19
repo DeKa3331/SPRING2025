@@ -32,6 +32,26 @@ public abstract class Vehicle implements IVehicleRepository {
         this.vehicles = vehiclesList;
     }
 
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setCarid(int carid) {
+        this.carid = carid;
+    }
+
     public String getBrand() {
         return brand;
     }
@@ -75,7 +95,7 @@ public abstract class Vehicle implements IVehicleRepository {
         this.rented = rented;
     }
 
-    public Vehicle findVehicleById(int carid) {
+    public  Vehicle findVehicleById(int carid) {
         for (Vehicle vehicle : this.vehicles) {
             if (vehicle.getCarid() == carid) {
                 return vehicle;
@@ -198,4 +218,6 @@ public abstract class Vehicle implements IVehicleRepository {
     public int hashCode() {
         return Objects.hash(brand, model, year);
     }
+
+
 }

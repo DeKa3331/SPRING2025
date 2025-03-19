@@ -1,5 +1,10 @@
 package org.example;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.nio.file.Path;
+import java.util.List;
+
 public class Authentication {
 
     private IUserRepository userRepository;
@@ -8,10 +13,11 @@ public class Authentication {
         this.userRepository = userRepository;
     }
 
-    public boolean authenticate(String login, String password) {
-        User user = userRepository.getUser(login);
+    // Metoda logowania
+    public static boolean login(String login, String password, Path userFilePath) {
+        User user = User.findUser(userFilePath, login);
 
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(DigestUtils.sha256Hex(password))) {
             return true;
         }
         return false;

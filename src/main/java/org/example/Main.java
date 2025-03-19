@@ -4,104 +4,82 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Path path = Paths.get("Vehicles.csv");
-        List<Vehicle> vehicleList = Vehicle.fromCsv(path);
-        System.out.println("Liczba pojazdów: " + vehicleList.size());
+        Path vehiclesPath = Paths.get("Vehicles.csv");
+        List<Vehicle> vehicleList = Vehicle.fromCsv(vehiclesPath);
 
         if (vehicleList.isEmpty()) {
             System.out.println("Brak pojazdów w bazie!");
         }
 
-        System.out.println("Dostępne pojazdy:");
-        for (Vehicle vehicle : vehicleList) {
-            vehicle.displayInfo();
+        Path usersFilePath = Paths.get("Accounts.csv");
+        List<User> users = User.loadFromCsv(usersFilePath);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Wybierz opcję: 1 - Zaloguj, 2 - Zarejestruj");
+        int option = scanner.nextInt();
+        scanner.nextLine();
+
+        User currentUser = null;
+
+        if (option == 1) {
+            System.out.println("Podaj login: ");
+            String login = scanner.nextLine();
+            System.out.println("Podaj hasło: ");
+            String password = scanner.nextLine();
+
+            currentUser = Authentication.login(users, login, password);
+            if (currentUser == null) {
+                System.out.println("Błędny login lub hasło!");
+                return;
+            } else {
+                System.out.println("Zalogowano jako: " + currentUser.getLogin());
+            }
+        } else if (option == 2) {
+            System.out.println("Podaj login: ");
+            String login = scanner.nextLine();
+            System.out.println("Podaj hasło: ");
+            String password = scanner.nextLine();
+
+            // Rejestracja użytkownika
+            User newUser = new User(login, DigestUtils.sha256Hex(password), "uzytkownik", null);
+            users.add(newUser);
+            User.saveToCsv(usersFilePath, (User) users);
+            System.out.println("Rejestracja zakończona sukcesem!");
         }
 
-        Vehicle vehicle1 = findVehicleById(vehicleList, 1);
-        if (vehicle1 != null) {
-            vehicle1.rentVehicle(1);
-            vehicle1.save();
-        }
-
-        System.out.println("\nPo wynajęciu pojazdu:");
-        for (Vehicle vehicle : vehicleList) {
-            vehicle.displayInfo();
-        }
-
-        if (vehicle1 != null) {
-            vehicle1.returnVehicle(vehicle1.getCarid());
-            vehicle1.save();
-        }
-
-        System.out.println("\nPo zwróceniu pojazdu:");
-        for (Vehicle vehicle : vehicleList) {
-            vehicle.displayInfo();
-        }
-
-        Vehicle car1 = new Car("Toyota", "Corolla", 2020, 100, 1, false);
-        Vehicle car2 = new Car("Toyota", "Corolla", 2020, 100, 2, false);
-        Vehicle car3 = new Car("Honda", "Civic", 2019, 90, 3, false);
-        Vehicle car4 = new Motorcycle("Honda", "CBR500", 2021, 120, 4, false, "Sport");
-
-        System.out.println("=== TEST: RÓŻNE OBIEKTY ===");
-        System.out.println(car1.equals(car2));
-        System.out.println(car1.equals(car3));
-        System.out.println(car1.equals(car4));
-        System.out.println("hashCode car1 == car2: " + (car1.hashCode() == car2.hashCode()));
-        System.out.println("hashCode car1 == car3: " + (car1.hashCode() == car3.hashCode()));
-
-        List<Vehicle> vehicleList2 = new ArrayList<>(List.of(car1, car2, car3, car4));
-        car1.setVehicles(vehicleList2);
-        List<Vehicle> copiedVehicles = car1.getVehicles();
-
-        Vehicle copiedCar = copiedVehicles.get(0);
-        System.out.println("Dostępność oryginalnego pojazdu (car1) przed zmianą: " + car1.isRented());
-        copiedCar.setRented(true);
-        System.out.println("Dostępność pojazdu po zmianie w kopii (copiedCar): " + copiedCar.isRented());
-        System.out.println("Dostępność oryginalnego pojazdu (car1) po zmianie: " + car1.isRented());
-
-        copiedCar.setRented(false);
-        System.out.println("\nPo ponownej zmianie w kopii:");
-        System.out.println("Dostępność oryginalnego pojazdu (car1): " + car1.isRented());
-        System.out.println("Dostępność pojazdu w kopii (copiedCar): " + copiedCar.isRented());
-
-        Vehicle copiedCar2 = copiedVehicles.get(1);
-        copiedCar2.setRented(true);
-        System.out.println("\n=== TEST: Drugi pojazd w kopii ===");
-        System.out.println("Dostępność oryginalnego pojazdu (car2) przed zmianą: " + car2.isRented());
-        System.out.println("Dostępność pojazdu po zmianie w kopii (copiedCar2): " + copiedCar2.isRented());
-        System.out.println("Dostępność oryginalnego pojazdu (car2) po zmianie: " + car2.isRented());
-
-        System.out.println("\n=== TEST: Wypisywanie pojazdów ===");
-        System.out.println("Oryginalne pojazdy:");
-        for (Vehicle vehicle : vehicleList2) {
-            vehicle.displayInfo();
-        }
-
-        System.out.println("\nPojazdy w kopii:");
-        for (Vehicle vehicle : copiedVehicles) {
-            vehicle.displayInfo();
-        }
-
-        car1.saveToCsv(Paths.get("Vehicles.csv"));
-
-        String s = "Asd";
-        System.out.println(s);
-        String sha256hex = DigestUtils.sha256Hex(s);
-        System.out.println(sha256hex);
-    }
-
-    private static Vehicle findVehicleById(List<Vehicle> vehicles, int carId) {
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle.getCarid() == carId) {
-                return vehicle;
+        // Sprawdź rolę i umożliwienie działań
+        if (currentUser != null && currentUser.isAdmin()) {
+            // Administrator może edytować pojazdy i wyświetlać użytkowników
+            System.out.println("Wybierz opcję: 1 - Edytuj pojazd, 2 - Wyświetl użytkowników");
+            int adminOption = scanner.nextInt();
+            if (adminOption == 1) {
+                System.out.println("Podaj ID pojazdu: ");
+                int carid = scanner.nextInt();
+                System.out.println("Podaj nową cenę: ");
+                double price = scanner.nextDouble();
+                System.out.println("Czy pojazd ma być wynajęty? (true/false): ");
+                boolean isRented = scanner.nextBoolean();
+                currentUser.editVehicle(vehicleList, carid, price, isRented);
+            } else if (adminOption == 2) {
+                currentUser.displayUsersWithVehicles(users);
+            }
+        } else if (currentUser != null && !currentUser.isAdmin()) {
+            // Zwykły użytkownik może wypożyczyć pojazd
+            System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
+            int vehicleId = scanner.nextInt();
+            Vehicle vehicle = findVehicleById(vehicleList, vehicleId);
+            if (vehicle != null && !vehicle.isRented()) {
+                currentUser.setRentedVehicle(vehicle);
+                vehicle.setRented(true);
+                System.out.println("Pojazd wypożyczony: " + vehicle);
+                vehicle.save(); // Zapisz zmiany w pliku CSV
+            } else {
+                System.out.println("Pojazd jest już wypożyczony lub nie istnieje.");
             }
         }
-        return null;
     }
-}
