@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="added plugin">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Authentication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/IUserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/UserRepository.java" afterDir="false" />
+    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="added everything requested  not sure if working">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/UserRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,13 +49,18 @@
     "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JAR Application.lab3-1.0-SNAPSHOT-shaded.jar">
+    <configuration name="lab3-1.0-SNAPSHOT-shaded.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/lab3-1.0-SNAPSHOT-shaded.jar" />
+      <method v="2" />
+    </configuration>
     <configuration name="lab3-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
       <option name="JAR_PATH" value="$PROJECT_DIR$/target/lab3-1.0-SNAPSHOT.jar" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JAR Application.lab3-1.0-SNAPSHOT-shaded.jar" />
         <item itemvalue="JAR Application.lab3-1.0-SNAPSHOT.jar" />
       </list>
     </recent_temporary>
@@ -103,13 +105,22 @@
       <option name="project" value="LOCAL" />
       <updated>1742395619827</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added everything requested  not sure if working">
+      <option name="closed" value="true" />
+      <created>1742396848962</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742396848962</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test" />
     <MESSAGE value="fixed, changed to maven" />
     <MESSAGE value="added plugin" />
-    <option name="LAST_COMMIT_MESSAGE" value="added plugin" />
+    <MESSAGE value="added everything requested  not sure if working" />
+    <option name="LAST_COMMIT_MESSAGE" value="added everything requested  not sure if working" />
   </component>
 </project>

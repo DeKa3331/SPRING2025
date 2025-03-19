@@ -1,5 +1,7 @@
 package org.example;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -87,6 +89,11 @@ public class Main {
         }
 
         car1.saveToCsv(Paths.get("Vehicles.csv"));
+
+        String s = "Asd";
+        System.out.println(s);
+        String sha256hex = DigestUtils.sha256Hex(s);
+        System.out.println(sha256hex);
     }
 
     private static Vehicle findVehicleById(List<Vehicle> vehicles, int carId) {
