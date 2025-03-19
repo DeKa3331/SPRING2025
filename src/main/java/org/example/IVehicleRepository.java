@@ -6,10 +6,7 @@ public interface IVehicleRepository {
     void rentVehicle(int carid);
     void returnVehicle(int carid);
     void save();
-
-    static List<Vehicle> getVehicles()
-    {
-        return null;
-    }
+    void addVehicle(Vehicle vehicle);
+    void removeVehicle(int carId);
+    List<Vehicle> getVehicles();
 }
-

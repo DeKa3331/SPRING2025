@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.List;
-
 class Car extends Vehicle {
     public Car(String brand, String model, int year, double price, int carid, boolean rented) {
         super(brand, model, year, price,rented, carid);
@@ -15,6 +13,16 @@ class Car extends Vehicle {
 
     @Override
     public void save() {
+
+    }
+
+    @Override
+    public void addVehicle(Vehicle vehicle) {
+
+    }
+
+    @Override
+    public void removeVehicle(int carId) {
 
     }
 }

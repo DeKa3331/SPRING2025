@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.List;
-
 class Motorcycle extends Vehicle {
     String category;
 
@@ -25,6 +23,17 @@ class Motorcycle extends Vehicle {
     public void save() {
 
     }
+
+    @Override
+    public void addVehicle(Vehicle vehicle) {
+
+    }
+
+    @Override
+    public void removeVehicle(int carId) {
+
+    }
+
     public String getCategory() {
         return category;
     }
