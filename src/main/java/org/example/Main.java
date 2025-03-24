@@ -7,6 +7,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
+/*
+kuba 123
+user
+admin
+
+
+ */
+
 public class Main {
     public static void main(String[] args) {
         Path vehiclesPath = Paths.get("Vehicles.csv");
@@ -32,7 +40,7 @@ public class Main {
             System.out.println("Podaj hasło: ");
             String password = scanner.nextLine();
 
-            currentUser = Authentication.login(users, login, password);
+            currentUser = Authentication.login(login, password);
             if (currentUser == null) {
                 System.out.println("Błędny login lub hasło!");
                 return;
@@ -48,7 +56,10 @@ public class Main {
             // Rejestracja użytkownika
             User newUser = new User(login, DigestUtils.sha256Hex(password), "uzytkownik", null);
             users.add(newUser);
-            User.saveToCsv(usersFilePath, (User) users);
+
+            // Zapisanie zaktualizowanej listy użytkowników do pliku CSV
+            User.saveToCsv(usersFilePath, users);
+
             System.out.println("Rejestracja zakończona sukcesem!");
         }
 
@@ -73,6 +84,7 @@ public class Main {
             System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
             int vehicleId = scanner.nextInt();
             Vehicle vehicle = findVehicleById(vehicleList, vehicleId);
+
             if (vehicle != null && !vehicle.isRented()) {
                 currentUser.setRentedVehicle(vehicle);
                 vehicle.setRented(true);
@@ -83,3 +95,13 @@ public class Main {
             }
         }
     }
+    private static Vehicle findVehicleById(List<Vehicle> vehicleList, int vehicleId) {
+        for (Vehicle vehicle : vehicleList) {
+            if (vehicle.getCarid() == vehicleId) {
+                return vehicle;
+            }
+        }
+        return null;
+    }
+
+}

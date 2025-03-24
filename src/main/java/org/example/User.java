@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class User {
+    private static List<Vehicle> userList = new ArrayList<>();
+
+    public static void setVehiclesList(List<Vehicle> vehicles) {
+        userList = vehicles;
+    }
     private String login;
     private String password;
     private String role;
@@ -61,17 +66,26 @@ public class User {
     }
 
     public static void registerUser(Path path, String login, String password) {
+        // Załaduj istniejących użytkowników
+        List<User> userList = User.loadFromCsv(path);
+
+        // Utwórz nowego użytkownika
         User newUser = new User(login, DigestUtils.sha256Hex(password), "user", null);
-        saveToCsv(path, newUser);
+
+        // Dodaj nowego użytkownika do listy
+        userList.add(newUser);
+
+        // Zapisz zaktualizowaną listę użytkowników do pliku CSV
+        User.saveToCsv(path, userList);
     }
 
     public String toCSV() {
         return login + ";" + password + ";" + role + ";" + (rentedVehicle != null ? rentedVehicle.getCarid() : "Brak pojazdu");
     }
 
-    public static void saveToCsv(Path path, User... users) {
+    public static void saveToCsv(Path path, List<User> users) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            writer.write("login;password;role;rentedVehicle\n");
+            writer.write("login;password;role;additional_info\n");
             for (User user : users) {
                 writer.write(user.toCSV() + "\n");
             }
@@ -95,6 +109,7 @@ public class User {
         return null;
     }
 
+
     public boolean isAdmin() {
         return "admin".equals(this.role);
     }
@@ -104,7 +119,7 @@ public class User {
             System.out.println("Tylko administrator może edytować pojazdy.");
             return;
         }
-        Vehicle vehicle = findVehicleById(vehicles, carid);
+        Vehicle vehicle = findVehicleById(carid);
         if (vehicle != null) {
             vehicle.setPrice(newPrice);
             vehicle.setRented(isRented);
@@ -131,8 +146,8 @@ public class User {
         }
     }
 
-    private Vehicle findVehicleById(List<Vehicle> vehicles, int carid) {
-        for (Vehicle vehicle : vehicles) {
+    private static Vehicle findVehicleById(int carid) {
+        for (Vehicle vehicle : userList) {
             if (vehicle.getCarid() == carid) {
                 return vehicle;
             }
@@ -163,7 +178,7 @@ public class User {
 
                 if (data.length > 3 && !data[3].equals("Brak pojazdu")) {
                     int carid = Integer.parseInt(data[3].trim());
-                    rentedVehicle = findVehicleById(vehicles, carid);
+                    rentedVehicle = findVehicleById(carid);
                 }
 
                 users.add(new User(login, password, role, rentedVehicle));

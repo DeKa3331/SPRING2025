@@ -3,23 +3,23 @@ package org.example;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.Paths;
 
 public class Authentication {
 
     private IUserRepository userRepository;
+    private static Path userFilePath = Paths.get("Accounts.csv");
 
-    public Authentication(IUserRepository userRepository) {
+    public Authentication(IUserRepository userRepository, Path userFilePath) {
         this.userRepository = userRepository;
+        this.userFilePath = userFilePath;
     }
-
-    // Metoda logowania
-    public static boolean login(String login, String password, Path userFilePath) {
-        User user = User.findUser(userFilePath, login);
+    public static User login(String login, String password) {
+        User user = User.findUser(userFilePath,login);
 
         if (user != null && user.getPassword().equals(DigestUtils.sha256Hex(password))) {
-            return true;
+            return user;
         }
-        return false;
+        return null;
     }
 }
