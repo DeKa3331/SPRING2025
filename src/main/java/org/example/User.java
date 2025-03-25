@@ -1,7 +1,5 @@
 package org.example;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,9 +11,6 @@ import java.util.Scanner;
 public class User {
     private static List<Vehicle> userList = new ArrayList<>();
 
-    public static void setVehiclesList(List<Vehicle> vehicles) {
-        userList = vehicles;
-    }
     private String login;
     private String password;
     private String role;
@@ -44,14 +39,6 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Vehicle getRentedVehicle() {
         return rentedVehicle;
     }
@@ -65,20 +52,6 @@ public class User {
         return "User{login='" + login + "', role='" + role + "', rentedVehicle=" + rentedVehicle + "}";
     }
 
-    public static void registerUser(Path path, String login, String password) {
-        // Załaduj istniejących użytkowników
-        List<User> userList = User.loadFromCsv(path);
-
-        // Utwórz nowego użytkownika
-        User newUser = new User(login, DigestUtils.sha256Hex(password), "user", null);
-
-        // Dodaj nowego użytkownika do listy
-        userList.add(newUser);
-
-        // Zapisz zaktualizowaną listę użytkowników do pliku CSV
-        User.saveToCsv(path, userList);
-    }
-
     public String toCSV() {
         return login + ";" + password + ";" + role + ";" + (rentedVehicle != null ? rentedVehicle.getCarid() : "Brak pojazdu");
     }
@@ -90,7 +63,7 @@ public class User {
                 writer.write(user.toCSV() + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
     }
 
@@ -104,7 +77,7 @@ public class User {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
         return null;
     }
@@ -184,7 +157,7 @@ public class User {
                 users.add(new User(login, password, role, rentedVehicle));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
         return users;
     }

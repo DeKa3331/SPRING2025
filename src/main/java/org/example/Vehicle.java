@@ -81,8 +81,7 @@ public abstract class Vehicle implements IVehicleRepository {
         for (Vehicle vehicle : this.vehicles) {
             if (vehicle instanceof Car) {
                 copy.add(new Car(vehicle.getBrand(), vehicle.getModel(), vehicle.getYear(), vehicle.getPrice(), vehicle.getCarid(), vehicle.isRented()));
-            } else if (vehicle instanceof Motorcycle) {
-                Motorcycle motorcycle = (Motorcycle) vehicle;
+            } else if (vehicle instanceof Motorcycle motorcycle) {
                 copy.add(new Motorcycle(motorcycle.getBrand(), motorcycle.getModel(), motorcycle.getYear(), motorcycle.getPrice(), motorcycle.getCarid(), motorcycle.isRented(), motorcycle.getCategory()));
             }
         }
@@ -177,7 +176,7 @@ public abstract class Vehicle implements IVehicleRepository {
                 vehicleList.add(vehicle);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
         return vehicleList;
     }
@@ -189,7 +188,7 @@ public abstract class Vehicle implements IVehicleRepository {
                 writer.write(vehicle.toCSV() + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
     }
 
