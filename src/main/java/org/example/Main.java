@@ -10,7 +10,7 @@ import java.util.Scanner;
 /*
 kuba 123
 user
-admin
+admin adminpassword
 
 
  */
@@ -19,6 +19,8 @@ public class Main {
     public static void main(String[] args) {
         Path vehiclesPath = Paths.get("Vehicles.csv");
         List<Vehicle> vehicleList = Vehicle.fromCsv(vehiclesPath);
+        // Wczytanie pojazdów z pliku CSV
+
 
         if (vehicleList.isEmpty()) {
             System.out.println("Brak pojazdów w bazie!");
@@ -53,20 +55,15 @@ public class Main {
             System.out.println("Podaj hasło: ");
             String password = scanner.nextLine();
 
-            // Rejestracja użytkownika
             User newUser = new User(login, DigestUtils.sha256Hex(password), "uzytkownik", null);
             users.add(newUser);
-
-            // Zapisanie zaktualizowanej listy użytkowników do pliku CSV
             User.saveToCsv(usersFilePath, users);
 
             System.out.println("Rejestracja zakończona sukcesem!");
         }
 
-        // Sprawdź rolę i umożliwienie działań
         if (currentUser != null && currentUser.isAdmin()) {
-            // Administrator może edytować pojazdy i wyświetlać użytkowników
-            System.out.println("Wybierz opcję: 1 - Edytuj pojazd, 2 - Wyświetl użytkowników");
+            System.out.println("Wybierz opcję: 1 - Edytuj pojazd, 2 - Wyświetl użytkowników, 3 - Wyświetl stan pojazdów");
             int adminOption = scanner.nextInt();
             if (adminOption == 1) {
                 System.out.println("Podaj ID pojazdu: ");
@@ -78,20 +75,62 @@ public class Main {
                 currentUser.editVehicle(vehicleList, carid, price, isRented);
             } else if (adminOption == 2) {
                 currentUser.displayUsersWithVehicles(users);
+            } else if (adminOption == 3) {
+                // Wyświetlenie stanu wszystkich pojazdów
+                System.out.println("Aktualny stan pojazdów:");
+                for (Vehicle vehicle : vehicleList) {
+                    System.out.println(vehicle);
+                }
             }
-        } else if (currentUser != null && !currentUser.isAdmin()) {
-            // Zwykły użytkownik może wypożyczyć pojazd
-            System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
-            int vehicleId = scanner.nextInt();
-            Vehicle vehicle = findVehicleById(vehicleList, vehicleId);
 
-            if (vehicle != null && !vehicle.isRented()) {
-                currentUser.setRentedVehicle(vehicle);
-                vehicle.setRented(true);
-                System.out.println("Pojazd wypożyczony: " + vehicle);
-                vehicle.save(); // Zapisz zmiany w pliku CSV
-            } else {
-                System.out.println("Pojazd jest już wypożyczony lub nie istnieje.");
+
+
+
+
+        } else if (currentUser != null && !currentUser.isAdmin()) {
+            System.out.println("Wybierz opcję: 1 - Wypożycz pojazd, 2 - Zwróć pojazd, 3 - Wyświetl dostępne pojazdy");
+            int userOption = scanner.nextInt();
+
+            if (userOption == 1) {
+                // Wypożyczenie pojazdu
+                System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
+                int vehicleId = scanner.nextInt();
+                Vehicle vehicle = findVehicleById(vehicleList, vehicleId);
+
+                if (vehicle != null && !vehicle.isRented()) {
+                    currentUser.setRentedVehicle(vehicle);  // Przypisanie pojazdu do użytkownika
+                    vehicle.rentVehicle(vehicleId);
+
+                    // Zapisanie zmian w pliku pojazdów
+                    vehicle.save(); // Zapisz stan zmienionego pojazdu
+
+                    // Zapisanie zmienionego stanu użytkownika
+                    User.saveToCsv(usersFilePath, users); // Zapisz zaktualizowaną listę użytkowników
+                } else {
+                    System.out.println("Pojazd jest już wypożyczony lub nie istnieje.");
+                }
+            }
+            else if (userOption == 2)
+            {
+                // Zwrot pojazdu
+                Vehicle rentedVehicle = currentUser.getRentedVehicle();
+                if (rentedVehicle != null) {
+                    rentedVehicle.setRented(false);
+                    System.out.println("Pojazd zwrócony: " + rentedVehicle);
+                    currentUser.setRentedVehicle(null); // Resetowanie wynajętego pojazdu u użytkownika
+                    rentedVehicle.save(); // Zapisz zmiany w pliku CSV
+                } else {
+                    System.out.println("Nie wypożyczono żadnego pojazdu.");
+                }
+            }
+            else if (userOption == 3) {
+                // Wyświetlenie dostępnych pojazdów
+                System.out.println("Dostępne pojazdy:");
+                for (Vehicle vehicle : vehicleList) {
+                    if (!vehicle.isRented()) {
+                        System.out.println(vehicle);
+                    }
+                }
             }
         }
     }

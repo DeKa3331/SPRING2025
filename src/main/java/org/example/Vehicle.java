@@ -88,7 +88,6 @@ public abstract class Vehicle implements IVehicleRepository {
         }
         return copy;
 
-        //ma robic i zweacac ta kopie
     }
 
     public void setRented(boolean rented) {
@@ -111,7 +110,8 @@ public abstract class Vehicle implements IVehicleRepository {
             if (!vehicle.isRented()) {
                 vehicle.setRented(true);
                 System.out.println("Pojazd o id " + carid + " został wynajęty.");
-                save();
+
+                save(); // Zapisz zmieniony pojazd
             } else {
                 System.out.println("Pojazd o id " + carid + " jest już wynajęty.");
             }
@@ -220,4 +220,7 @@ public abstract class Vehicle implements IVehicleRepository {
     }
 
 
+    public boolean isEmpty() {
+        return true;
+    }
 }
