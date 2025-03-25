@@ -33,6 +33,9 @@ public class User {
     public void setLogin(String login) {
         this.login = login;
     }
+    public static void addUser(User user) {
+        userList.add(user);
+    }
 
     public String getPassword() {
         return password;
@@ -48,15 +51,22 @@ public class User {
 
     public void setRentedVehicle(Vehicle rentedVehicle) {
         this.rentedVehicle = rentedVehicle;
+
         if (rentedVehicle != null) {
             System.out.println("Rented vehicle carid set to: " + rentedVehicle.getCarid());
         } else {
             System.out.println("No vehicle rented.");
         }
 
-        Path path = Paths.get("Accounts.csv"); // Ustaw właściwą ścieżkę
-        saveToCsv(path, userList); // Zapisz użytkowników do CSV
+        // Upewnij się, że użytkownik jest w liście
+        if (!userList.contains(this)) {
+            userList.add(this);
+        }
+
+        Path path = Paths.get("Accounts.csv");
+        saveToCsv(path, userList);
     }
+
 
 
 
@@ -71,15 +81,27 @@ public class User {
     }
 
     public static void saveToCsv(Path path, List<User> users) {
+        if (users.isEmpty()) {
+            System.out.println("Lista użytkowników jest pusta, zapis pominięty.");
+            return;
+        }
+
+        System.out.println("Dane użytkowników przed zapisem:");
+        for (User user : users) {
+            System.out.println(user.toCSV());
+        }
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            writer.write("login;password;role;rentedVehicle\n");  // Nagłówek, zmieniłem na 'rentedVehicle'
+            writer.write("login;password;role;rentedVehicle\n");
             for (User user : users) {
                 writer.write(user.toCSV() + "\n");
             }
+            System.out.println("Plik Accounts.csv został zapisany.");
         } catch (IOException e) {
             System.out.println("Błąd podczas zapisywania do CSV: " + e.getMessage());
         }
     }
+
+
 
     public static User getCurrentUser() {
         return currentUser;
@@ -153,12 +175,11 @@ public class User {
 
 
     public static List<User> loadFromCsv(Path path) {
-        List<User> users = new ArrayList<>();
+        userList.clear(); // Czyścimy listę przed załadowaniem nowych danych
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine();
+                scanner.nextLine(); // Pomijamy nagłówek
             }
-
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(";");
@@ -172,17 +193,19 @@ public class User {
                 String role = data[2].trim();
                 Vehicle rentedVehicle = null;
 
-                if (data.length > 3 && !data[3].equals("Brak pojazdu")) {
+                if (!data[3].equals("Brak pojazdu")) {
                     int carid = Integer.parseInt(data[3].trim());
                     rentedVehicle = findVehicleById(carid);
                 }
 
-                users.add(new User(login, password, role, rentedVehicle));
+                User user = new User(login, password, role, rentedVehicle);
+                userList.add(user);  // Zaktualizuj `userList`
             }
         } catch (IOException e) {
-            System.out.println("error");
+            System.out.println("Błąd podczas odczytu pliku: " + e.getMessage());
         }
-        return users;
+        return userList;  // Zwracamy całą listę
     }
+
 
 }

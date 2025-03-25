@@ -123,6 +123,7 @@ public abstract class Vehicle implements IVehicleRepository {
                     System.out.println("Pojazd o ID " + carid + " został wynajęty przez użytkownika: " + currentUser.getLogin());
                     save(); // Zapisz zmieniony pojazd
                     // Ustawienie carid u użytkownika
+
                     currentUser.setRentedVehicle(vehicle);  // Zaktualizowanie pojazdu wynajmowanego przez użytkownika
                 } else {
                     System.out.println("Brak zalogowanego użytkownika.");
