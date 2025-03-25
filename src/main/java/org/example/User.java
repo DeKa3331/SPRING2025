@@ -33,9 +33,6 @@ public class User {
     public void setLogin(String login) {
         this.login = login;
     }
-    public static void addUser(User user) {
-        userList.add(user);
-    }
 
     public String getPassword() {
         return password;
@@ -58,7 +55,6 @@ public class User {
             System.out.println("No vehicle rented.");
         }
 
-        // Upewnij się, że użytkownik jest w liście
         if (!userList.contains(this)) {
             userList.add(this);
         }
@@ -147,7 +143,6 @@ public class User {
         }
     }
 
-    // Wyświetlanie użytkowników i przypisanych pojazdów
     public void displayUsersWithVehicles(List<User> users) {
         if (!isAdmin()) {
             System.out.println("Tylko administrator może wyświetlać użytkowników.");
@@ -164,7 +159,7 @@ public class User {
     }
 
     private static Vehicle findVehicleById(int carid) {
-        for (User user : userList) { // Przeglądamy użytkowników
+        for (User user : userList) {
             Vehicle rentedVehicle = user.getRentedVehicle();
             if (rentedVehicle != null && rentedVehicle.getCarid() == carid) {
                 return rentedVehicle;
@@ -175,10 +170,10 @@ public class User {
 
 
     public static List<User> loadFromCsv(Path path) {
-        userList.clear(); // Czyścimy listę przed załadowaniem nowych danych
+        userList.clear();
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine(); // Pomijamy nagłówek
+                scanner.nextLine();
             }
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -199,12 +194,12 @@ public class User {
                 }
 
                 User user = new User(login, password, role, rentedVehicle);
-                userList.add(user);  // Zaktualizuj `userList`
+                userList.add(user);
             }
         } catch (IOException e) {
             System.out.println("Błąd podczas odczytu pliku: " + e.getMessage());
         }
-        return userList;  // Zwracamy całą listę
+        return userList;
     }
 
 

@@ -75,7 +75,7 @@ public class VehicleRepository implements IVehicleRepository {
         return new ArrayList<>(vehicles);
     }
 
-    // Dodatkowa metoda do wyszukiwania pojazdu po ID
+
     public Vehicle findVehicleById(int carId) {
         return vehicles.stream()
                 .filter(vehicle -> vehicle.getCarid() == carId)
@@ -83,7 +83,6 @@ public class VehicleRepository implements IVehicleRepository {
                 .orElse(null);
     }
 
-    // Zapis do pliku CSV
     public void saveToCsv(Path path) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write("carid;brand;model;year;price;rented;category\n");

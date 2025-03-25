@@ -105,7 +105,7 @@ public abstract class Vehicle implements IVehicleRepository {
     public void rentVehicle(int carid) {
         System.out.println("Aktualna zawartość listy pojazdów:");
         for (Vehicle vehicle : this.vehicles) {
-            System.out.println(vehicle);  // Wyświetlamy wszystkie pojazdy w liście
+            System.out.println(vehicle);
         }
         System.out.println("Próba wynajmu pojazdu o ID: " + carid);
         Vehicle vehicle = findVehicleById(carid);
@@ -117,14 +117,14 @@ public abstract class Vehicle implements IVehicleRepository {
                 System.out.println("Pojazd o ID " + carid + " nie jest wynajęty. Dokonano wynajmu.");
                 vehicle.setRented(true);
 
-                User currentUser = User.getCurrentUser();  // Pobieramy obecnego użytkownika
+                User currentUser = User.getCurrentUser();
                 if (currentUser != null) {
-                    currentUser.setRentedVehicle(vehicle);  // Przypisanie pojazdu do użytkownika
+                    currentUser.setRentedVehicle(vehicle);
                     System.out.println("Pojazd o ID " + carid + " został wynajęty przez użytkownika: " + currentUser.getLogin());
-                    save(); // Zapisz zmieniony pojazd
-                    // Ustawienie carid u użytkownika
+                    save();
 
-                    currentUser.setRentedVehicle(vehicle);  // Zaktualizowanie pojazdu wynajmowanego przez użytkownika
+
+                    currentUser.setRentedVehicle(vehicle);
                 } else {
                     System.out.println("Brak zalogowanego użytkownika.");
                 }
@@ -136,23 +136,30 @@ public abstract class Vehicle implements IVehicleRepository {
         }
     }
 
-
-
     @Override
     public void returnVehicle(int carid) {
         Vehicle vehicle = findVehicleById(carid);
         if (vehicle != null) {
             if (vehicle.isRented()) {
                 vehicle.setRented(false);
-                System.out.println("Pojazd o id " + carid + " został zwrócony.");
+                System.out.println("Pojazd o ID " + carid + " został zwrócony.");
+
+
+                User currentUser = User.getCurrentUser();
+                if (currentUser != null && currentUser.getRentedVehicle() != null && currentUser.getRentedVehicle().getCarid() == carid) {
+                    currentUser.setRentedVehicle(null);
+                    System.out.println("Zaktualizowano dane użytkownika: " + currentUser.getLogin() + " (brak wynajętego pojazdu).");
+                }
+
                 save();
             } else {
-                System.out.println("Pojazd o id " + carid + " nie był wynajęty.");
+                System.out.println("Pojazd o ID " + carid + " nie był wynajęty.");
             }
         } else {
-            System.out.println("Pojazd o id " + carid + " nie istnieje w naszej bazie.");
+            System.out.println("Pojazd o ID " + carid + " nie istnieje w naszej bazie.");
         }
     }
+
 
     @Override
     public void save() {
@@ -192,7 +199,7 @@ public abstract class Vehicle implements IVehicleRepository {
 
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine(); // Pominięcie nagłówka
+                scanner.nextLine();
             }
 
             while (scanner.hasNextLine()) {

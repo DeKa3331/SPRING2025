@@ -9,14 +9,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Stworzenie repozytorium pojazdów, które obsługuje operacje na pojazdach
         IVehicleRepository vehicleRepo = new VehicleRepository();
 
-        // Załaduj pojazdy z pliku CSV
         Path vehiclesPath = Paths.get("Vehicles.csv");
-        vehicleRepo.save();  // Wczytuje pojazdy z pliku do repozytorium
+        vehicleRepo.save();
 
-        // Sprawdzenie, czy repozytorium zawiera pojazdy
         if (vehicleRepo.getVehicles().isEmpty()) {
             System.out.println("Brak pojazdów w bazie!");
         }

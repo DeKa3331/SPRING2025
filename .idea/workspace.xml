@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="working user">
       <change beforePath="$PROJECT_DIR$/Accounts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Accounts.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vehicles.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Vehicles.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/User.java" afterDir="false" />
@@ -173,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742920296347</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="working user">
+      <option name="closed" value="true" />
+      <created>1742921597221</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1742921597221</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -184,6 +191,7 @@
     <MESSAGE value="dodano menu rejrestracji jednak nie w 100% sprawne" />
     <MESSAGE value="rejestracja i logowanie dziala,teraz pora na funckje admina i uzytkownika" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="working user" />
+    <option name="LAST_COMMIT_MESSAGE" value="working user" />
   </component>
 </project>
