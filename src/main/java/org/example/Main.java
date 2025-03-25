@@ -19,7 +19,6 @@ public class Main {
     public static void main(String[] args) {
         Path vehiclesPath = Paths.get("Vehicles.csv");
         List<Vehicle> vehicleList = Vehicle.fromCsv(vehiclesPath);
-        // Wczytanie pojazdów z pliku CSV
 
 
         if (vehicleList.isEmpty()) {
@@ -76,7 +75,6 @@ public class Main {
             } else if (adminOption == 2) {
                 currentUser.displayUsersWithVehicles(users);
             } else if (adminOption == 3) {
-                // Wyświetlenie stanu wszystkich pojazdów
                 System.out.println("Aktualny stan pojazdów:");
                 for (Vehicle vehicle : vehicleList) {
                     System.out.println(vehicle);
@@ -92,39 +90,35 @@ public class Main {
             int userOption = scanner.nextInt();
 
             if (userOption == 1) {
-                // Wypożyczenie pojazdu
                 System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
                 int vehicleId = scanner.nextInt();
                 Vehicle vehicle = findVehicleById(vehicleList, vehicleId);
 
                 if (vehicle != null && !vehicle.isRented()) {
-                    currentUser.setRentedVehicle(vehicle);  // Przypisanie pojazdu do użytkownika
+                    currentUser.setRentedVehicle(vehicle);
                     vehicle.rentVehicle(vehicleId);
 
-                    // Zapisanie zmian w pliku pojazdów
-                    vehicle.save(); // Zapisz stan zmienionego pojazdu
 
-                    // Zapisanie zmienionego stanu użytkownika
-                    User.saveToCsv(usersFilePath, users); // Zapisz zaktualizowaną listę użytkowników
+                    vehicle.save();
+
+                    User.saveToCsv(usersFilePath, users);
                 } else {
                     System.out.println("Pojazd jest już wypożyczony lub nie istnieje.");
                 }
             }
             else if (userOption == 2)
             {
-                // Zwrot pojazdu
                 Vehicle rentedVehicle = currentUser.getRentedVehicle();
                 if (rentedVehicle != null) {
                     rentedVehicle.setRented(false);
                     System.out.println("Pojazd zwrócony: " + rentedVehicle);
-                    currentUser.setRentedVehicle(null); // Resetowanie wynajętego pojazdu u użytkownika
-                    rentedVehicle.save(); // Zapisz zmiany w pliku CSV
+                    currentUser.setRentedVehicle(null);
+                    rentedVehicle.save();
                 } else {
                     System.out.println("Nie wypożyczono żadnego pojazdu.");
                 }
             }
             else if (userOption == 3) {
-                // Wyświetlenie dostępnych pojazdów
                 System.out.println("Dostępne pojazdy:");
                 for (Vehicle vehicle : vehicleList) {
                     if (!vehicle.isRented()) {
