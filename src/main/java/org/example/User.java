@@ -4,17 +4,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class User {
-    private static List<Vehicle> userList = new ArrayList<>();
+    private static List<User> userList = new ArrayList<>();
 
     private String login;
     private String password;
     private String role;
     private Vehicle rentedVehicle;
+
+    private static User currentUser;
 
     public User(String login, String password, String role, Vehicle rentedVehicle) {
         this.login = login;
@@ -45,7 +48,18 @@ public class User {
 
     public void setRentedVehicle(Vehicle rentedVehicle) {
         this.rentedVehicle = rentedVehicle;
+        if (rentedVehicle != null) {
+            System.out.println("Rented vehicle carid set to: " + rentedVehicle.getCarid());
+        } else {
+            System.out.println("No vehicle rented.");
+        }
+
+        Path path = Paths.get("Accounts.csv"); // Ustaw właściwą ścieżkę
+        saveToCsv(path, userList); // Zapisz użytkowników do CSV
     }
+
+
+
 
     @Override
     public String toString() {
@@ -58,13 +72,21 @@ public class User {
 
     public static void saveToCsv(Path path, List<User> users) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            writer.write("login;password;role;additional_info\n");
+            writer.write("login;password;role;rentedVehicle\n");  // Nagłówek, zmieniłem na 'rentedVehicle'
             for (User user : users) {
                 writer.write(user.toCSV() + "\n");
             }
         } catch (IOException e) {
-            System.out.println("error");
+            System.out.println("Błąd podczas zapisywania do CSV: " + e.getMessage());
         }
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
     }
 
     public static User findUser(Path path, String login) {
@@ -120,9 +142,10 @@ public class User {
     }
 
     private static Vehicle findVehicleById(int carid) {
-        for (Vehicle vehicle : userList) {
-            if (vehicle.getCarid() == carid) {
-                return vehicle;
+        for (User user : userList) { // Przeglądamy użytkowników
+            Vehicle rentedVehicle = user.getRentedVehicle();
+            if (rentedVehicle != null && rentedVehicle.getCarid() == carid) {
+                return rentedVehicle;
             }
         }
         return null;

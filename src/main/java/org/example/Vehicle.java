@@ -103,7 +103,6 @@ public abstract class Vehicle implements IVehicleRepository {
 
     @Override
     public void rentVehicle(int carid) {
-
         System.out.println("Aktualna zawartość listy pojazdów:");
         for (Vehicle vehicle : this.vehicles) {
             System.out.println(vehicle);  // Wyświetlamy wszystkie pojazdy w liście
@@ -117,8 +116,17 @@ public abstract class Vehicle implements IVehicleRepository {
             if (!vehicle.isRented()) {
                 System.out.println("Pojazd o ID " + carid + " nie jest wynajęty. Dokonano wynajmu.");
                 vehicle.setRented(true);
-                System.out.println("Pojazd o ID " + carid + " został wynajęty.");
-                save(); // Zapisz zmieniony pojazd
+
+                User currentUser = User.getCurrentUser();  // Pobieramy obecnego użytkownika
+                if (currentUser != null) {
+                    currentUser.setRentedVehicle(vehicle);  // Przypisanie pojazdu do użytkownika
+                    System.out.println("Pojazd o ID " + carid + " został wynajęty przez użytkownika: " + currentUser.getLogin());
+                    save(); // Zapisz zmieniony pojazd
+                    // Ustawienie carid u użytkownika
+                    currentUser.setRentedVehicle(vehicle);  // Zaktualizowanie pojazdu wynajmowanego przez użytkownika
+                } else {
+                    System.out.println("Brak zalogowanego użytkownika.");
+                }
             } else {
                 System.out.println("Pojazd o ID " + carid + " jest już wynajęty.");
             }
@@ -126,6 +134,8 @@ public abstract class Vehicle implements IVehicleRepository {
             System.out.println("Pojazd o ID " + carid + " nie istnieje w naszej bazie.");
         }
     }
+
+
 
     @Override
     public void returnVehicle(int carid) {

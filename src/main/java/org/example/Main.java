@@ -43,6 +43,7 @@ public class Main {
                 return;
             } else {
                 System.out.println("Zalogowano jako: " + currentUser.getLogin());
+                User.setCurrentUser(currentUser);
             }
         } else if (option == 2) {
             System.out.println("Podaj login: ");
