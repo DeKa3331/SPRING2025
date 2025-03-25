@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="working user">
+    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="fixed some warnings">
       <change beforePath="$PROJECT_DIR$/Accounts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Accounts.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vehicles.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Vehicles.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742921597221</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixed some warnings">
+      <option name="closed" value="true" />
+      <created>1742922117405</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1742922117405</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -192,6 +198,7 @@
     <MESSAGE value="rejestracja i logowanie dziala,teraz pora na funckje admina i uzytkownika" />
     <MESSAGE value="test" />
     <MESSAGE value="working user" />
-    <option name="LAST_COMMIT_MESSAGE" value="working user" />
+    <MESSAGE value="fixed some warnings" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed some warnings" />
   </component>
 </project>

@@ -55,13 +55,19 @@ public class User {
             System.out.println("No vehicle rented.");
         }
 
-        if (!userList.contains(this)) {
-            userList.add(this);
+        // Zamiast dodawać nowego użytkownika, znajdź istniejącego i zaktualizuj
+        for (User user : userList) {
+            if (user.getLogin().equals(this.login)) {
+                user.rentedVehicle = rentedVehicle;
+                break;
+            }
         }
 
+        // Zapisz aktualizowaną listę użytkowników do pliku
         Path path = Paths.get("Accounts.csv");
         saveToCsv(path, userList);
     }
+
 
 
 
