@@ -9,7 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleRepository implements IVehicleRepository {
-    private final List<Vehicle> vehicles = new ArrayList<>();
+
+    private List<Vehicle> vehicles;
+
+    public VehicleRepository() {
+        this.vehicles = Vehicle.fromCsv(Paths.get("Vehicles.csv"));
+    }
 
     @Override
     public void rentVehicle(int carid) {
@@ -89,4 +94,5 @@ public class VehicleRepository implements IVehicleRepository {
             System.out.println("Błąd podczas zapisywania do pliku CSV: " + e.getMessage());
         }
     }
+
 }
