@@ -77,24 +77,21 @@ public abstract class Vehicle implements IVehicleRepository {
     }
 
     public List<Vehicle> getVehicles() {
-        List<Vehicle> copy = new ArrayList<>();
+        System.out.println("Lista pojazdów:");
         for (Vehicle vehicle : this.vehicles) {
-            if (vehicle instanceof Car) {
-                copy.add(new Car(vehicle.getBrand(), vehicle.getModel(), vehicle.getYear(), vehicle.getPrice(), vehicle.getCarid(), vehicle.isRented()));
-            } else if (vehicle instanceof Motorcycle motorcycle) {
-                copy.add(new Motorcycle(motorcycle.getBrand(), motorcycle.getModel(), motorcycle.getYear(), motorcycle.getPrice(), motorcycle.getCarid(), motorcycle.isRented(), motorcycle.getCategory()));
-            }
+            System.out.println(vehicle);
         }
-        return copy;
-
+        return new ArrayList<>(this.vehicles);
     }
 
     public void setRented(boolean rented) {
         this.rented = rented;
     }
 
-    public  Vehicle findVehicleById(int carid) {
+    public Vehicle findVehicleById(int carid) {
+        System.out.println("Szukam pojazdu o ID: " + carid);
         for (Vehicle vehicle : this.vehicles) {
+            System.out.println("Sprawdzam pojazd: " + vehicle);
             if (vehicle.getCarid() == carid) {
                 return vehicle;
             }
@@ -102,20 +99,31 @@ public abstract class Vehicle implements IVehicleRepository {
         return null;
     }
 
+
+
     @Override
     public void rentVehicle(int carid) {
-        Vehicle vehicle = findVehicleById(carid);
-        if (vehicle != null) {
-            if (!vehicle.isRented()) {
-                vehicle.setRented(true);
-                System.out.println("Pojazd o id " + carid + " został wynajęty.");
 
+        System.out.println("Aktualna zawartość listy pojazdów:");
+        for (Vehicle vehicle : this.vehicles) {
+            System.out.println(vehicle);  // Wyświetlamy wszystkie pojazdy w liście
+        }
+        System.out.println("Próba wynajmu pojazdu o ID: " + carid);
+        Vehicle vehicle = findVehicleById(carid);
+
+        if (vehicle != null) {
+            System.out.println("Pojazd znaleziony: " + vehicle.toString());
+
+            if (!vehicle.isRented()) {
+                System.out.println("Pojazd o ID " + carid + " nie jest wynajęty. Dokonano wynajmu.");
+                vehicle.setRented(true);
+                System.out.println("Pojazd o ID " + carid + " został wynajęty.");
                 save(); // Zapisz zmieniony pojazd
             } else {
-                System.out.println("Pojazd o id " + carid + " jest już wynajęty.");
+                System.out.println("Pojazd o ID " + carid + " jest już wynajęty.");
             }
         } else {
-            System.out.println("Pojazd o id " + carid + " nie istnieje w naszej bazie.");
+            System.out.println("Pojazd o ID " + carid + " nie istnieje w naszej bazie.");
         }
     }
 
@@ -141,6 +149,8 @@ public abstract class Vehicle implements IVehicleRepository {
     }
 
     public static Vehicle fromCSVLine(String line) {
+        System.out.println("Przetwarzanie linii CSV: " + line);
+
         String[] parts = line.split(";");
 
         if (parts.length < 6) {
@@ -157,29 +167,38 @@ public abstract class Vehicle implements IVehicleRepository {
 
         if (parts.length > 6) {
             String category = parts[6].trim();
+            System.out.println("Wczytano motocykl: " + brand + " " + model + ", ID: " + carid);
             return new Motorcycle(brand, model, year, price, carid, rented, category);
         } else {
+            System.out.println("Wczytano samochód: " + brand + " " + model + ", ID: " + carid);
             return new Car(brand, model, year, price, carid, rented);
         }
     }
 
     public static List<Vehicle> fromCsv(Path path) {
         List<Vehicle> vehicleList = new ArrayList<>();
+        System.out.println("Rozpoczęcie wczytywania pojazdów z CSV...");
+
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine();
+                scanner.nextLine(); // Pominięcie nagłówka
             }
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 Vehicle vehicle = Vehicle.fromCSVLine(line);
-                vehicleList.add(vehicle);
+                if (vehicle != null) {
+                    vehicleList.add(vehicle);
+                }
             }
+            System.out.println("Wczytano " + vehicleList.size() + " pojazdów.");
         } catch (IOException e) {
-            System.out.println("error");
+            System.out.println("Błąd podczas wczytywania pliku CSV: " + e.getMessage());
         }
+
         return vehicleList;
     }
+
 
     public void saveToCsv(Path path) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
