@@ -11,4 +11,6 @@ public interface IVehicleRepository {
     List<Vehicle> getVehicles();
 
     Vehicle findVehicleById(int carid);
+
+    int generateCarId();
 }

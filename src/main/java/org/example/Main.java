@@ -73,7 +73,7 @@ public class Main {
                 boolean isRented = scanner.nextBoolean();
                 scanner.nextLine();
 
-                int carid = generateCarId();  // Można dodać metodę generującą unikalne ID pojazdu
+                int carid = vehicleRepo.generateCarId();  // Można dodać metodę generującą unikalne ID pojazdu
                 Vehicle newVehicle = new Car(brand, model, year, price, carid, isRented);  // Stwórz nowy pojazd
                 vehicleRepo.addVehicle(newVehicle);  // Dodaj pojazd do repozytorium
                 vehicleRepo.save();  // Zapisz pojazdy do pliku
@@ -150,8 +150,6 @@ public class Main {
         return null;
     }
 
-    private static int generateCarId() {
-        return (int) (Math.random() * 1000);
-    }
+
 
 }

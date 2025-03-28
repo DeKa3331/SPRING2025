@@ -55,9 +55,22 @@ public class VehicleRepository implements IVehicleRepository {
 
     @Override
     public void addVehicle(Vehicle vehicle) {
+        vehicle.setCarid(generateCarId());  // Przypisz unikalny carid
         vehicles.add(vehicle);
         System.out.println("Dodano pojazd: " + vehicle);
     }
+    public int generateCarId() {
+        // Sprawdź, czy lista pojazdów nie jest pusta
+        int maxCarId = 0;
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle.getCarid() > maxCarId) {
+                maxCarId = vehicle.getCarid();
+            }
+        }
+        return maxCarId + 1;  // Inkrementuj ID o 1, aby uzyskać nowe unikalne ID
+    }
+
+
 
     @Override
     public void removeVehicle(int carId) {

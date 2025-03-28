@@ -34,6 +34,11 @@ class Motorcycle extends Vehicle {
 
     }
 
+    @Override
+    public int generateCarId() {
+        return 0;
+    }
+
     public String getCategory() {
         return category;
     }

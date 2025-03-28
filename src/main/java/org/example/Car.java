@@ -24,4 +24,9 @@ class Car extends Vehicle {
     public void removeVehicle(int carId) {
 
     }
+
+    @Override
+    public int generateCarId() {
+        return 0;
+    }
 }
