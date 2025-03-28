@@ -50,12 +50,6 @@ public class User {
     public void setRentedVehicle(Vehicle rentedVehicle) {
         this.rentedVehicle = rentedVehicle;
 
-        if (rentedVehicle != null) {
-            System.out.println("Rented vehicle carid set to: " + rentedVehicle.getCarid());
-        } else {
-            System.out.println("No vehicle rented.");
-        }
-
         for (User user : userList) {
             if (user.getLogin().equals(this.login)) {
                 user.rentedVehicle = rentedVehicle;
@@ -66,6 +60,7 @@ public class User {
         Path path = Paths.get("Accounts.csv");
         saveToCsv(path, userList);
     }
+
 
 
 
@@ -83,24 +78,18 @@ public class User {
 
     public static void saveToCsv(Path path, List<User> users) {
         if (users.isEmpty()) {
-            System.out.println("Lista użytkowników jest pusta, zapis pominięty.");
             return;
         }
 
-        System.out.println("Dane użytkowników przed zapisem:");
-        for (User user : users) {
-            System.out.println(user.toCSV());
-        }
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write("login;password;role;rentedVehicle\n");
             for (User user : users) {
                 writer.write(user.toCSV() + "\n");
             }
-            System.out.println("Plik Accounts.csv został zapisany.");
         } catch (IOException e) {
-            System.out.println("Błąd podczas zapisywania do CSV: " + e.getMessage());
         }
     }
+
 
 
 
@@ -116,39 +105,30 @@ public class User {
         try {
             List<String> lines = Files.readAllLines(path);
             for (String line : lines.subList(1, lines.size())) {
-                System.out.println("Wczytana linia: " + line);
                 String[] data = line.split(";");
                 if (data.length < 4) {
-                    System.out.println("Błąd w formacie danych: " + line);
                     continue;
                 }
 
                 if (data[0].equals(login)) {
-                    System.out.println("Znaleziono użytkownika: " + login);
                     Vehicle rentedVehicle = null;
                     if (!data[3].equals("Brak pojazdu")) {
                         try {
                             int carid = Integer.parseInt(data[3].trim());
-                            System.out.println("Przypisany pojazd ID: " + carid);
                             rentedVehicle = findVehicleById(carid);
                             if (rentedVehicle == null) {
-                                System.out.println("Pojazd o ID " + carid + " nie istnieje.");
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Nieprawidłowy format ID pojazdu: " + data[3]);
                         }
-                    } else {
-                        System.out.println("Brak wypożyczonego pojazdu.");
                     }
                     return new User(data[0], data[1], data[2], rentedVehicle);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Błąd podczas odczytu pliku: " + e.getMessage());
         }
-        System.out.println("Nie znaleziono użytkownika: " + login);
         return null;
     }
+
 
 
 
@@ -189,7 +169,6 @@ public class User {
     }
 
     private static Vehicle findVehicleById(int carid) {
-        System.out.println("Szukam pojazdu o ID: " + carid);
         return vehicleRepository.findVehicleById(carid);
     }
 

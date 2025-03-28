@@ -173,12 +173,9 @@ public abstract class Vehicle implements IVehicleRepository {
     }
 
     public static Vehicle fromCSVLine(String line) {
-        System.out.println("Przetwarzanie linii CSV: " + line);
-
         String[] parts = line.split(";");
 
         if (parts.length < 6) {
-            System.out.println("Błąd w danych CSV (za mało danych): " + line);
             return null;
         }
 
@@ -191,17 +188,15 @@ public abstract class Vehicle implements IVehicleRepository {
 
         if (parts.length > 6) {
             String category = parts[6].trim();
-            System.out.println("Wczytano motocykl: " + brand + " " + model + ", ID: " + carid);
             return new Motorcycle(brand, model, year, price, carid, rented, category);
         } else {
-            System.out.println("Wczytano samochód: " + brand + " " + model + ", ID: " + carid);
             return new Car(brand, model, year, price, carid, rented);
         }
     }
 
+
     public static List<Vehicle> fromCsv(Path path) {
         List<Vehicle> vehicleList = new ArrayList<>();
-        System.out.println("Rozpoczęcie wczytywania pojazdów z CSV...");
 
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
@@ -215,13 +210,13 @@ public abstract class Vehicle implements IVehicleRepository {
                     vehicleList.add(vehicle);
                 }
             }
-            System.out.println("Wczytano " + vehicleList.size() + " pojazdów.");
         } catch (IOException e) {
             System.out.println("Błąd podczas wczytywania pliku CSV: " + e.getMessage());
         }
 
         return vehicleList;
     }
+
 
 
     public void saveToCsv(Path path) {

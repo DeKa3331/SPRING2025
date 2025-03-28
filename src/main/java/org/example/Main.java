@@ -94,7 +94,6 @@ public class Main {
             }
             else if (userOption == 2) {
                 Vehicle rentedVehicle = currentUser.getRentedVehicle();
-                System.out.println("Sprawdzam, czy użytkownik ma wynajęty pojazd: " + currentUser.getRentedVehicle());
 
                 if (rentedVehicle != null) {
                     rentedVehicle.returnVehicle(rentedVehicle.getCarid());

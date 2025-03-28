@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="almost working">
+    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="w 100proc dzialajacy uzytkownik">
       <change beforePath="$PROJECT_DIR$/Accounts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Accounts.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vehicles.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Vehicles.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -195,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743162360878</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="w 100proc dzialajacy uzytkownik">
+      <option name="closed" value="true" />
+      <created>1743162627314</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1743162627314</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -209,6 +218,7 @@
     <MESSAGE value="working user" />
     <MESSAGE value="fixed some warnings" />
     <MESSAGE value="almost working" />
-    <option name="LAST_COMMIT_MESSAGE" value="almost working" />
+    <MESSAGE value="w 100proc dzialajacy uzytkownik" />
+    <option name="LAST_COMMIT_MESSAGE" value="w 100proc dzialajacy uzytkownik" />
   </component>
 </project>
