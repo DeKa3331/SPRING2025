@@ -56,7 +56,6 @@ public class User {
             System.out.println("No vehicle rented.");
         }
 
-        // Zamiast dodawać nowego użytkownika, znajdź istniejącego i zaktualizuj
         for (User user : userList) {
             if (user.getLogin().equals(this.login)) {
                 user.rentedVehicle = rentedVehicle;
@@ -64,7 +63,6 @@ public class User {
             }
         }
 
-        // Zapisz aktualizowaną listę użytkowników do pliku
         Path path = Paths.get("Accounts.csv");
         saveToCsv(path, userList);
     }
@@ -117,7 +115,7 @@ public class User {
     public static User findUser(Path path, String login) {
         try {
             List<String> lines = Files.readAllLines(path);
-            for (String line : lines.subList(1, lines.size())) { // Pomijamy nagłówek
+            for (String line : lines.subList(1, lines.size())) {
                 System.out.println("Wczytana linia: " + line);
                 String[] data = line.split(";");
                 if (data.length < 4) {
@@ -199,7 +197,7 @@ public class User {
         userList.clear();
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine(); // Pomijamy nagłówek
+                scanner.nextLine();
             }
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

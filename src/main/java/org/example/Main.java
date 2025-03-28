@@ -99,6 +99,7 @@ public class Main {
                 if (rentedVehicle != null) {
                     rentedVehicle.returnVehicle(rentedVehicle.getCarid());
                     currentUser.setRentedVehicle(null);
+                    vehicleRepo.returnVehicle(rentedVehicle.getCarid());
                     User.saveToCsv(usersFilePath, users);
                     vehicleRepo.save();
                 } else {

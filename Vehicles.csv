@@ -1,5 +1,5 @@
 carid;brand;model;year;price;rented;category
-1;Toyota;Corolla;2020;100.0;true
+1;Toyota;Corolla;2020;100.0;false
 2;Toyota;Corolla;2020;100.0;false
 3;Honda;Civic;2019;90.0;false
 4;Honda;CBR500;2021;120.0;false;Sport

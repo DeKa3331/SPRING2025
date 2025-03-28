@@ -151,6 +151,7 @@ public abstract class Vehicle implements IVehicleRepository {
 
                     currentUser.setRentedVehicle(null);
                     System.out.println("Zaktualizowano użytkownika: " + currentUser.getLogin());
+
                     User.saveToCsv(Paths.get("Accounts.csv"), User.loadFromCsv(Paths.get("Accounts.csv")));
                 }
 
@@ -162,6 +163,7 @@ public abstract class Vehicle implements IVehicleRepository {
             System.out.println("Pojazd o podanym ID nie istnieje.");
         }
     }
+
 
 
 
