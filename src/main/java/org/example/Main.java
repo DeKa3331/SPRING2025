@@ -94,15 +94,18 @@ public class Main {
             }
             else if (userOption == 2) {
                 Vehicle rentedVehicle = currentUser.getRentedVehicle();
+                System.out.println("Sprawdzam, czy użytkownik ma wynajęty pojazd: " + currentUser.getRentedVehicle());
+
                 if (rentedVehicle != null) {
-                    rentedVehicle.setRented(false);
-                    System.out.println("Pojazd zwrócony: " + rentedVehicle);
+                    rentedVehicle.returnVehicle(rentedVehicle.getCarid());
                     currentUser.setRentedVehicle(null);
-                    rentedVehicle.save();
+                    User.saveToCsv(usersFilePath, users);
+                    vehicleRepo.save();
                 } else {
-                    System.out.println("Nie wypożyczono żadnego pojazdu.");
+                    System.out.println("Nie masz wypożyczonego pojazdu.");
                 }
             }
+
             else if (userOption == 3) {
                 System.out.println("Dostępne pojazdy:");
                 for (Vehicle vehicle : vehicleRepo.getVehicles()) {

@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class User {
     private static List<User> userList = new ArrayList<>();
+    private static VehicleRepository vehicleRepository = new VehicleRepository();
 
     private String login;
     private String password;
@@ -116,17 +117,42 @@ public class User {
     public static User findUser(Path path, String login) {
         try {
             List<String> lines = Files.readAllLines(path);
-            for (String line : lines.subList(1, lines.size())) {
+            for (String line : lines.subList(1, lines.size())) { // Pomijamy nagłówek
+                System.out.println("Wczytana linia: " + line);
                 String[] data = line.split(";");
+                if (data.length < 4) {
+                    System.out.println("Błąd w formacie danych: " + line);
+                    continue;
+                }
+
                 if (data[0].equals(login)) {
-                    return new User(data[0], data[1], data[2], null);
+                    System.out.println("Znaleziono użytkownika: " + login);
+                    Vehicle rentedVehicle = null;
+                    if (!data[3].equals("Brak pojazdu")) {
+                        try {
+                            int carid = Integer.parseInt(data[3].trim());
+                            System.out.println("Przypisany pojazd ID: " + carid);
+                            rentedVehicle = findVehicleById(carid);
+                            if (rentedVehicle == null) {
+                                System.out.println("Pojazd o ID " + carid + " nie istnieje.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Nieprawidłowy format ID pojazdu: " + data[3]);
+                        }
+                    } else {
+                        System.out.println("Brak wypożyczonego pojazdu.");
+                    }
+                    return new User(data[0], data[1], data[2], rentedVehicle);
                 }
             }
         } catch (IOException e) {
-            System.out.println("error");
+            System.out.println("Błąd podczas odczytu pliku: " + e.getMessage());
         }
+        System.out.println("Nie znaleziono użytkownika: " + login);
         return null;
     }
+
+
 
 
     public boolean isAdmin() {
@@ -165,38 +191,31 @@ public class User {
     }
 
     private static Vehicle findVehicleById(int carid) {
-        for (User user : userList) {
-            Vehicle rentedVehicle = user.getRentedVehicle();
-            if (rentedVehicle != null && rentedVehicle.getCarid() == carid) {
-                return rentedVehicle;
-            }
-        }
-        return null;
+        System.out.println("Szukam pojazdu o ID: " + carid);
+        return vehicleRepository.findVehicleById(carid);
     }
-
 
     public static List<User> loadFromCsv(Path path) {
         userList.clear();
         try (Scanner scanner = new Scanner(path.toFile())) {
             if (scanner.hasNextLine()) {
-                scanner.nextLine();
+                scanner.nextLine(); // Pomijamy nagłówek
             }
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(";");
-                if (data.length < 4) {
-                    System.out.println("Błąd w danych CSV (za mało danych): " + line);
-                    continue;
-                }
-
                 String login = data[0].trim();
                 String password = data[1].trim();
                 String role = data[2].trim();
                 Vehicle rentedVehicle = null;
 
                 if (!data[3].equals("Brak pojazdu")) {
-                    int carid = Integer.parseInt(data[3].trim());
-                    rentedVehicle = findVehicleById(carid);
+                    try {
+                        int carid = Integer.parseInt(data[3].trim());
+                        rentedVehicle = findVehicleById(carid);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Niepoprawny numer ID pojazdu: " + data[3]);
+                    }
                 }
 
                 User user = new User(login, password, role, rentedVehicle);
@@ -207,6 +226,7 @@ public class User {
         }
         return userList;
     }
+
 
 
 }

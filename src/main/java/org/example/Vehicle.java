@@ -139,26 +139,30 @@ public abstract class Vehicle implements IVehicleRepository {
     @Override
     public void returnVehicle(int carid) {
         Vehicle vehicle = findVehicleById(carid);
+
         if (vehicle != null) {
             if (vehicle.isRented()) {
                 vehicle.setRented(false);
                 System.out.println("Pojazd o ID " + carid + " został zwrócony.");
 
-
                 User currentUser = User.getCurrentUser();
-                if (currentUser != null && currentUser.getRentedVehicle() != null && currentUser.getRentedVehicle().getCarid() == carid) {
+                if (currentUser != null && currentUser.getRentedVehicle() != null
+                        && currentUser.getRentedVehicle().getCarid() == carid) {
+
                     currentUser.setRentedVehicle(null);
-                    System.out.println("Zaktualizowano dane użytkownika: " + currentUser.getLogin() + " (brak wynajętego pojazdu).");
+                    System.out.println("Zaktualizowano użytkownika: " + currentUser.getLogin());
+                    User.saveToCsv(Paths.get("Accounts.csv"), User.loadFromCsv(Paths.get("Accounts.csv")));
                 }
 
                 save();
             } else {
-                System.out.println("Pojazd o ID " + carid + " nie był wynajęty.");
+                System.out.println("Pojazd nie był wynajęty.");
             }
         } else {
-            System.out.println("Pojazd o ID " + carid + " nie istnieje w naszej bazie.");
+            System.out.println("Pojazd o podanym ID nie istnieje.");
         }
     }
+
 
 
     @Override
