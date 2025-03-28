@@ -56,19 +56,45 @@ public class Main {
         }
 
         if (currentUser != null && currentUser.isAdmin()) {
-            System.out.println("Wybierz opcję: 1 - Edytuj pojazd, 2 - Wyświetl użytkowników, 3 - Wyświetl stan pojazdów");
+            System.out.println("Wybierz opcję: 1 - Dodaj pojazd, 2 - Usuń pojazd, 3 - Wyświetl użytkowników, 4 - Wyświetl stan pojazdów");
             int adminOption = scanner.nextInt();
+            scanner.nextLine();
+
             if (adminOption == 1) {
-                System.out.println("Podaj ID pojazdu: ");
-                int carid = scanner.nextInt();
-                System.out.println("Podaj nową cenę: ");
+                System.out.println("Podaj markę pojazdu: ");
+                String brand = scanner.nextLine();
+                System.out.println("Podaj model pojazdu: ");
+                String model = scanner.nextLine();
+                System.out.println("Podaj rok produkcji: ");
+                int year = scanner.nextInt();
+                System.out.println("Podaj cenę pojazdu: ");
                 double price = scanner.nextDouble();
                 System.out.println("Czy pojazd ma być wynajęty? (true/false): ");
                 boolean isRented = scanner.nextBoolean();
-                currentUser.editVehicle(vehicleRepo.getVehicles(), carid, price, isRented);
+                scanner.nextLine();
+
+                int carid = generateCarId();  // Można dodać metodę generującą unikalne ID pojazdu
+                Vehicle newVehicle = new Car(brand, model, year, price, carid, isRented);  // Stwórz nowy pojazd
+                vehicleRepo.addVehicle(newVehicle);  // Dodaj pojazd do repozytorium
+                vehicleRepo.save();  // Zapisz pojazdy do pliku
+                System.out.println("Pojazd dodany pomyślnie!");
             } else if (adminOption == 2) {
-                currentUser.displayUsersWithVehicles(users);
+                System.out.println("Podaj ID pojazdu do usunięcia: ");
+                int carid = scanner.nextInt();
+                Vehicle vehicleToRemove = vehicleRepo.findVehicleById(carid);
+                if (vehicleToRemove != null) {
+                    vehicleRepo.removeVehicle(vehicleToRemove.getCarid());
+                    vehicleRepo.save();
+                    System.out.println("Pojazd usunięty pomyślnie.");
+                } else {
+                    System.out.println("Pojazd o podanym ID nie istnieje.");
+                }
             } else if (adminOption == 3) {
+                System.out.println("Lista użytkowników:");
+                for (User user : users) {
+                    System.out.println(user);
+                }
+            } else if (adminOption == 4) {
                 System.out.println("Aktualny stan pojazdów:");
                 for (Vehicle vehicle : vehicleRepo.getVehicles()) {
                     System.out.println(vehicle);
@@ -77,6 +103,7 @@ public class Main {
         } else if (currentUser != null && !currentUser.isAdmin()) {
             System.out.println("Wybierz opcję: 1 - Wypożycz pojazd, 2 - Zwróć pojazd, 3 - Wyświetl dostępne pojazdy");
             int userOption = scanner.nextInt();
+            scanner.nextLine();
 
             if (userOption == 1) {
                 System.out.println("Wybierz pojazd do wypożyczenia (wpisz ID): ");
@@ -91,8 +118,7 @@ public class Main {
                 } else {
                     System.out.println("Pojazd jest już wypożyczony lub nie istnieje.");
                 }
-            }
-            else if (userOption == 2) {
+            } else if (userOption == 2) {
                 Vehicle rentedVehicle = currentUser.getRentedVehicle();
 
                 if (rentedVehicle != null) {
@@ -104,9 +130,7 @@ public class Main {
                 } else {
                     System.out.println("Nie masz wypożyczonego pojazdu.");
                 }
-            }
-
-            else if (userOption == 3) {
+            } else if (userOption == 3) {
                 System.out.println("Dostępne pojazdy:");
                 for (Vehicle vehicle : vehicleRepo.getVehicles()) {
                     if (!vehicle.isRented()) {
@@ -125,4 +149,9 @@ public class Main {
         }
         return null;
     }
+
+    private static int generateCarId() {
+        return (int) (Math.random() * 1000);
+    }
+
 }

@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="w 100proc dzialajacy uzytkownik">
-      <change beforePath="$PROJECT_DIR$/Accounts.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Accounts.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vehicles.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Vehicles.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Vehicle.java" afterDir="false" />
+    <list default="true" id="75f54d22-5572-44de-bff2-7821c7b34020" name="Changes" comment="usuniete printy z debugowania">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/IVehicleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/IVehicleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +203,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743162627314</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="usuniete printy z debugowania">
+      <option name="closed" value="true" />
+      <created>1743163048243</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1743163048243</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -219,6 +226,7 @@
     <MESSAGE value="fixed some warnings" />
     <MESSAGE value="almost working" />
     <MESSAGE value="w 100proc dzialajacy uzytkownik" />
-    <option name="LAST_COMMIT_MESSAGE" value="w 100proc dzialajacy uzytkownik" />
+    <MESSAGE value="usuniete printy z debugowania" />
+    <option name="LAST_COMMIT_MESSAGE" value="usuniete printy z debugowania" />
   </component>
 </project>

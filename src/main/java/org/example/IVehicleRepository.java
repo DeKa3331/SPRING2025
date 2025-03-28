@@ -9,4 +9,6 @@ public interface IVehicleRepository {
     void addVehicle(Vehicle vehicle);
     void removeVehicle(int carId);
     List<Vehicle> getVehicles();
+
+    Vehicle findVehicleById(int carid);
 }
