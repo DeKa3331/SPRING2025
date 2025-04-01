@@ -50,7 +50,16 @@
     "year": 1985,
     "plate": "LU123",
     "attributes": {
-      "seats": 20
+      "seats": 20.0
     }
+  },
+  {
+    "id": "5fdcc1b8-94cf-48eb-ad2e-250bc619475c",
+    "category": "Szybki",
+    "brand": "Seat",
+    "model": "19TDI",
+    "year": 2003,
+    "plate": "LU189",
+    "attributes": {}
   }
 ]

@@ -1,14 +1,21 @@
 package com.umcsuser.carrent.app;
 
-
-import com.umcsuser.carrent.models.*;
+import com.umcsuser.carrent.models.User;
 import com.umcsuser.carrent.repositories.*;
 import com.umcsuser.carrent.repositories.impl.*;
 import com.umcsuser.carrent.services.*;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Scanner;
+
+/*
+L:admin
+H:admin123
+
+L:user1
+H:user123
+
+*/
 
 public class Main {
     public static void main(String[] args) {
@@ -21,41 +28,91 @@ public class Main {
         AuthService authService = new AuthService(userRepository);
         VehicleService vehicleService = new VehicleService(vehicleRepository);
         RentalService rentalService = new RentalService(rentalRepository, vehicleRepository);
+        AdminService adminService = new AdminService(vehicleRepository, userRepository, rentalRepository);
+        UserService userService = new UserService(vehicleRepository, rentalService);
 
-        // Przykładowe użycie
-        try {
-            // Rejestracja admina
-            //User admin = authService.register("admin", "admin123", "ADMIN");
+        Scanner scanner = new Scanner(System.in);
+        Optional<User> loggedInUser = null;
+        User currentUser = null;
 
-            // Rejestracja użytkownika
-            //User user = authService.register("user1", "user123", "USER");
+        while (currentUser ==null) {
+            System.out.println("Wybierz opcję: 1 - Zaloguj, 2 - Zarejestruj, 3 - Wyjdź");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-            // Dodanie pojazdu przez admina
-            Vehicle bus = Vehicle.builder()
-                    .category("Bus")
-                    .brand("Volkswagen")
-                    .model("T2")
-                    .year(1985)
-                    .plate("LU123")
-                    .build();
-            bus.addAttribute("seats", 20);
-            vehicleService.addVehicle(bus);
+            if (choice == 1) {
+                System.out.println("Podaj login:");
+                String login = scanner.nextLine();
+                System.out.println("Podaj hasło:");
+                String password = scanner.nextLine();
+                loggedInUser = authService.login(login, password);
 
-            // Wypożyczenie pojazdu przez użytkownika
-            Optional<User> loggedInUser = authService.login("user1", "user123");
-            if (loggedInUser.isPresent()) {
-                List<Vehicle> availableVehicles = vehicleService.getAllVehicles().stream()
-                        .filter(v -> rentalService.isVehicleAvailable(v.getId()))
-                        .collect(Collectors.toList());
-
-                if (!availableVehicles.isEmpty()) {
-                    Rental rental = rentalService.rentVehicle(loggedInUser.get(), availableVehicles.get(0));
-                    System.out.println("Vehicle rented: " + rental);
+                if (loggedInUser.isPresent()) {
+                    System.out.println("Zalogowano jako: " + loggedInUser.get().getLogin());
+                    break;
+                } else {
+                    System.out.println("Błędne dane logowania!");
                 }
+            } else if (choice == 2) {
+                System.out.println("Podaj login:");
+                String login = scanner.nextLine();
+                System.out.println("Podaj hasło:");
+                String password = scanner.nextLine();
+                authService.register(login, password, "USER");
+                System.out.println("Rejestracja zakończona sukcesem!");
+            } else if (choice == 3) {
+                System.out.println("Zamykanie aplikacji...");
+                return;
+            } else {
+                System.out.println("Niepoprawny wybór, spróbuj ponownie.");
             }
+        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        User user = loggedInUser.get();
+        currentUser=user;
+        if (user.getRole().equals("ADMIN")) {
+            adminMenu(adminService, scanner);
+        } else {
+            userMenu(userService, currentUser, scanner);
+        }
+    }
+
+    private static void adminMenu(AdminService adminService, Scanner scanner)    {
+        while (true) {
+            System.out.println("ADMIN MENU: 1 - Dodaj pojazd, 2 - Edytuj pojazd, 3 - Wyświetl wynajmy, 4 - Wyloguj");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> adminService.addVehicle(scanner);
+                case 2 -> adminService.editVehicle(scanner);
+                case 3 -> adminService.listAllRentals();
+                case 4 -> {
+                    System.out.println("Wylogowano.");
+                    return;
+                }
+                default -> System.out.println("Niepoprawny wybór!");
+            }
+        }
+    }
+
+    private static void userMenu(UserService userService, User currentUser, Scanner scanner) {
+        while (true) {
+            System.out.println("USER MENU: 1 - Wypożycz pojazd, 2 - Zwróć pojazd, 3 - Pokaz dostepne,4-exit");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> userService.rentVehicle(currentUser, scanner);
+                case 2 -> userService.returnVehicle(currentUser);
+                case 3 -> userService.listAvailableVehicles();
+
+                case 4 -> {
+                    System.out.println("Wylogowano.");
+                    return;
+                }
+                default -> System.out.println("Niepoprawny wybór!");
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ public class RentalJsonRepository implements RentalRepository {
 
     public Rental save(Rental rental) {
         if (rental.getId() == null || rental.getId().isBlank()) {
-            rental.setId(UUID.randomUUID().toString());
+            rental.setId(UUID.randomUUID().toString());//TODO zmienic to rental id na kolejne a nie losowe
         } else {
             deleteById(rental.getId());
         }
