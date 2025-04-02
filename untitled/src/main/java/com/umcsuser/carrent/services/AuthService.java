@@ -33,7 +33,6 @@ public class AuthService {
                 .passwordHash(passwordHash)
                 .role(role)
                 .build();
-
         return userRepository.save(user);
     }
 }

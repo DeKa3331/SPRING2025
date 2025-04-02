@@ -5,6 +5,7 @@ import com.umcsuser.carrent.repositories.RentalRepository;
 import com.umcsuser.carrent.repositories.UserRepository;
 import com.umcsuser.carrent.repositories.VehicleRepository;
 import com.umcsuser.carrent.repositories.impl.*;
+import com.umcsuser.carrent.services.AdminService;
 import com.umcsuser.carrent.services.AuthService;
 import com.umcsuser.carrent.services.RentalService;
 import com.umcsuser.carrent.services.VehicleService;
@@ -12,11 +13,23 @@ import com.umcsuser.carrent.services.VehicleService;
 public class Main {
     public static void main(String[] args) {
         //String storageType = args.length > 0 ? args[0] : "json";
+
+        /*
+        L:admin
+        H;admin123
+
+        L:Kuba
+        H:123
+
+
+         */
         String storageType = "jdbc";
 
         UserRepository userRepo;
         VehicleRepository vehicleRepo;
         RentalRepository rentalRepo;
+
+
 
         switch (storageType) {
             case "jdbc" -> {
@@ -35,8 +48,9 @@ public class Main {
         AuthService authService = new AuthService(userRepo);
         VehicleService vehicleService = new VehicleService(vehicleRepo);
         RentalService rentalService = new RentalService(rentalRepo,vehicleRepo);
+        AdminService adminService = new AdminService(vehicleRepo,userRepo,rentalRepo);
 
-        App app = new App(authService, vehicleService, rentalService);
+        App app = new App(authService, vehicleService, rentalService,adminService);
         app.run();
     }
 }

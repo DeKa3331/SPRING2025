@@ -12,10 +12,11 @@ public class App {
     private final RentalService rentalService;
     private AdminService adminService;
 
-    public App(AuthService authService, VehicleService vehicleService, RentalService rentalService) {
+    public App(AuthService authService, VehicleService vehicleService, RentalService rentalService,AdminService adminService) {
         this.authService = authService;
         this.vehicleService = vehicleService;
         this.rentalService = rentalService;
+        this.adminService= adminService;
     }
 
     public void run() {
@@ -57,6 +58,7 @@ public class App {
         }
 
         User user = loggedInUser.get();
+        System.out.println("User role: " + loggedInUser.get().getRole());
         currentUser = user;
         if (user.getRole().equals("ADMIN")) {
             adminMenu(scanner);

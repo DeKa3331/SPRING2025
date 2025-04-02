@@ -23,8 +23,8 @@ public class RentalJdbcRepository implements RentalRepository {
                         .id(rs.getString("id"))
                         .vehicleId(rs.getString("vehicle_id"))
                         .userId(rs.getString("user_id"))
-                        .returnDateTime(rs.getString("start_date"))
-                        .rentDateTime(rs.getString("end_date"))
+                        .returnDateTime(rs.getString("rent_date"))
+                        .rentDateTime(rs.getString("return_date"))
                         .build();
                 list.add(rental);
             }
@@ -47,8 +47,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("start_date"))
-                            .rentDateTime(rs.getString("end_date"))
+                            .returnDateTime(rs.getString("rent_date"))
+                            .rentDateTime(rs.getString("return_date"))
                             .build();
                     return Optional.of(rental);
                 }
@@ -73,8 +73,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("start_date"))
-                            .rentDateTime(rs.getString("end_date"))
+                            .returnDateTime(rs.getString("rent_date"))
+                            .rentDateTime(rs.getString("return_date"))
                             .build();
                     rentals.add(rental);
                 }
@@ -99,8 +99,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("start_date"))
-                            .rentDateTime(rs.getString("end_date"))
+                            .returnDateTime(rs.getString("rent_date"))
+                            .rentDateTime(rs.getString("return_date"))
                             .build();
                     rentals.add(rental);
                 }

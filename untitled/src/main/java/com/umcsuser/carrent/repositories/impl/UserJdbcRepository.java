@@ -22,6 +22,7 @@ public class UserJdbcRepository implements UserRepository {
                         .id(rs.getString("id"))
                         .login(rs.getString("login"))
                         .passwordHash(rs.getString("password"))
+                        .role(rs.getString("role"))
                         .build();
                 list.add(user);
             }
@@ -44,6 +45,7 @@ public class UserJdbcRepository implements UserRepository {
                             .id(rs.getString("id"))
                             .login(rs.getString("login"))
                             .passwordHash(rs.getString("password"))
+                            .role(rs.getString("role"))
                             .build();
                     return Optional.of(user);
                 }
@@ -67,6 +69,7 @@ public class UserJdbcRepository implements UserRepository {
                             .id(rs.getString("id"))
                             .login(rs.getString("login"))
                             .passwordHash(rs.getString("password"))
+                            .role(rs.getString("role"))
                             .build();
                     return Optional.of(user);
                 }
