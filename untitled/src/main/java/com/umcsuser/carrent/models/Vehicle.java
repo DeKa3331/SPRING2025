@@ -3,22 +3,22 @@ package com.umcsuser.carrent.models;
 import lombok.*;
 
 import java.util.Map;
-import java.util.HashMap;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Vehicle {
+
     private String id;
     private String category;
     private String brand;
     private String model;
     private int year;
     private String plate;
-
+    private double price;
     @Builder.Default
-    private Map<String, Object> attributes = new HashMap<>();
+    private Map<String, Object> attributes = Map.of();
 
     public Object getAttribute(String key) {
         return attributes.get(key);

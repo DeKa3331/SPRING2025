@@ -42,6 +42,7 @@ public class AdminService {
                 .model(model)
                 .year(year)
                 .plate(plate)
+                //.price(price)
                 .build();
 
         System.out.println("Czy chcesz dodać atrybuty? (tak/nie)");

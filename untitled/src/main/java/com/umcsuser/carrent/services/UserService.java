@@ -7,10 +7,10 @@ import com.umcsuser.carrent.repositories.VehicleRepository;
 import java.util.Scanner;
 
 public class UserService {
-    private final VehicleRepository vehicleRepo;
-    private final RentalService rentalService;
+    private VehicleRepository vehicleRepo;
+    private RentalService rentalService;
 
-    public UserService(VehicleRepository vehicleRepo, RentalService rentalService) {
+    public UserService() {
         this.vehicleRepo = vehicleRepo;
         this.rentalService = rentalService;
     }
