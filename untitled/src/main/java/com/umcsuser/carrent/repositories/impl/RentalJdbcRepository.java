@@ -23,8 +23,8 @@ public class RentalJdbcRepository implements RentalRepository {
                         .id(rs.getString("id"))
                         .vehicleId(rs.getString("vehicle_id"))
                         .userId(rs.getString("user_id"))
-                        .returnDateTime(rs.getString("rent_date"))
-                        .rentDateTime(rs.getString("return_date"))
+                        .rentDateTime(rs.getString("rent_date"))
+                        .returnDateTime(rs.getString("return_date"))
                         .build();
                 list.add(rental);
             }
@@ -47,8 +47,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("rent_date"))
-                            .rentDateTime(rs.getString("return_date"))
+                            .rentDateTime(rs.getString("rent_date"))
+                            .returnDateTime(rs.getString("return_date"))
                             .build();
                     return Optional.of(rental);
                 }
@@ -73,8 +73,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("rent_date"))
-                            .rentDateTime(rs.getString("return_date"))
+                            .rentDateTime(rs.getString("rent_date"))
+                            .returnDateTime(rs.getString("return_date"))
                             .build();
                     rentals.add(rental);
                 }
@@ -99,8 +99,8 @@ public class RentalJdbcRepository implements RentalRepository {
                             .id(rs.getString("id"))
                             .vehicleId(rs.getString("vehicle_id"))
                             .userId(rs.getString("user_id"))
-                            .returnDateTime(rs.getString("rent_date"))
-                            .rentDateTime(rs.getString("return_date"))
+                            .rentDateTime(rs.getString("rent_date"))
+                            .returnDateTime(rs.getString("return_date"))
                             .build();
                     rentals.add(rental);
                 }
@@ -114,12 +114,16 @@ public class RentalJdbcRepository implements RentalRepository {
     @Override
     public Rental save(Rental rental) {
         if (rental.getId() == null || rental.getId().isBlank()) {
-            rental.setId(UUID.randomUUID().toString());  // TODO Zmienic to na kolejne ID
+            rental.setId(UUID.randomUUID().toString());
+            return insertNewRental(rental);
         } else {
-            deleteById(rental.getId());
+            return updateExistingRental(rental);
         }
+    }
 
-        String sql = "INSERT INTO rental (id, vehicle_id, user_id, start_date, end_date) VALUES (?, ?, ?, ?, ?)";
+    private Rental insertNewRental(Rental rental) {
+        String sql = "INSERT INTO rental (id, vehicle_id, user_id, rent_date, return_date) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -127,11 +131,40 @@ public class RentalJdbcRepository implements RentalRepository {
             stmt.setString(2, rental.getVehicleId());
             stmt.setString(3, rental.getUserId());
             stmt.setTimestamp(4, Timestamp.valueOf(rental.getRentDateTime()));
-            stmt.setTimestamp(5, Timestamp.valueOf(rental.getReturnDateTime()));
+
+            if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
+                stmt.setTimestamp(5, Timestamp.valueOf(rental.getReturnDateTime()));
+            } else {
+                stmt.setNull(5, Types.TIMESTAMP);
+            }
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error occurred while saving rental", e);
+            throw new RuntimeException("Error occurred while inserting rental", e);
+        }
+        return rental;
+    }
+
+    private Rental updateExistingRental(Rental rental) {
+        String sql = "UPDATE rental SET vehicle_id = ?, user_id = ?, rent_date = ?, return_date = ? WHERE id = ?";
+
+        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, rental.getVehicleId());
+            stmt.setString(2, rental.getUserId());
+            stmt.setTimestamp(3, Timestamp.valueOf(rental.getRentDateTime()));
+
+            if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
+                stmt.setTimestamp(4, Timestamp.valueOf(rental.getReturnDateTime()));
+            } else {
+                stmt.setNull(4, Types.TIMESTAMP);
+            }
+
+            stmt.setString(5, rental.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error occurred while updating rental", e);
         }
         return rental;
     }

@@ -40,8 +40,13 @@ public class RentalService {
     }
 
     public Rental returnVehicle(Rental rental) {
-        rental.setReturnDateTime(LocalDateTime.now().format(formatter));
-        return rentalRepository.save(rental);
+        if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
+            throw new IllegalStateException("Vehicle already returned");
+        }
+        Rental existingRental = rentalRepository.findById(rental.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
+        existingRental.setReturnDateTime(LocalDateTime.now().format(formatter));
+        return rentalRepository.save(existingRental);
     }
 
     public boolean isVehicleAvailable(String vehicleId) {
