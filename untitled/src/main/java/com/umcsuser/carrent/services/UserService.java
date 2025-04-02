@@ -10,7 +10,7 @@ public class UserService {
     private VehicleRepository vehicleRepo;
     private RentalService rentalService;
 
-    public UserService() {
+    public UserService(VehicleRepository vehicleRepo, RentalService rentalService) {
         this.vehicleRepo = vehicleRepo;
         this.rentalService = rentalService;
     }

@@ -50,7 +50,7 @@ public class Main {
         RentalService rentalService = new RentalService(rentalRepo,vehicleRepo);
         AdminService adminService = new AdminService(vehicleRepo,userRepo,rentalRepo);
 
-        App app = new App(authService, vehicleService, rentalService,adminService);
+        App app = new App(authService, vehicleService, rentalService,adminService,vehicleRepo);
         app.run();
     }
 }

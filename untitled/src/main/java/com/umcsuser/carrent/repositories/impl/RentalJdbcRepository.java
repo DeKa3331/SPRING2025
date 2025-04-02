@@ -13,7 +13,7 @@ public class RentalJdbcRepository implements RentalRepository {
     @Override
     public List<Rental> findAll() {
         List<Rental> list = new ArrayList<>();
-        String sql = "SELECT * FROM rental"; // Zakładamy, że tabela nazywa się "rental"
+        String sql = "SELECT * FROM rental";
         try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -114,7 +114,7 @@ public class RentalJdbcRepository implements RentalRepository {
     @Override
     public Rental save(Rental rental) {
         if (rental.getId() == null || rental.getId().isBlank()) {
-            rental.setId(UUID.randomUUID().toString());  // Zmienic to na kolejne ID, jeśli potrzebujesz
+            rental.setId(UUID.randomUUID().toString());  // TODO Zmienic to na kolejne ID
         } else {
             deleteById(rental.getId());
         }

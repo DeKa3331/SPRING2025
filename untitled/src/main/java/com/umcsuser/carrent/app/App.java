@@ -1,6 +1,7 @@
 package com.umcsuser.carrent.app;
 
 import com.umcsuser.carrent.models.User;
+import com.umcsuser.carrent.repositories.VehicleRepository;
 import com.umcsuser.carrent.services.*;
 
 import java.util.Optional;
@@ -10,13 +11,15 @@ public class App {
     private final AuthService authService;
     private final VehicleService vehicleService;
     private final RentalService rentalService;
-    private AdminService adminService;
+    private final AdminService adminService;
+    private final VehicleRepository vehicleRepo;
 
-    public App(AuthService authService, VehicleService vehicleService, RentalService rentalService,AdminService adminService) {
+    public App(AuthService authService, VehicleService vehicleService, RentalService rentalService,AdminService adminService,VehicleRepository vehicleRepo) {
         this.authService = authService;
         this.vehicleService = vehicleService;
         this.rentalService = rentalService;
         this.adminService= adminService;
+        this.vehicleRepo=vehicleRepo;
     }
 
     public void run() {
@@ -87,7 +90,7 @@ public class App {
     }
 
     private void userMenu(Scanner scanner,User currentUser) {
-        UserService userService = new UserService();
+        UserService userService = new UserService(vehicleRepo, rentalService);
         while (true) {
             System.out.println("USER MENU: 1 - Wypożycz pojazd, 2 - Zwróć pojazd, 3 - Pokaż dostępne pojazdy, 4 - Wyjdź");
             int choice = scanner.nextInt();
