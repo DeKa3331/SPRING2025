@@ -36,13 +36,19 @@ public class AdminService {
         System.out.println("Podaj numer rejestracyjny pojazdu:");
         String plate = scanner.nextLine();
 
+        System.out.println("Podaj cene pojazdu:");
+        double price = scanner.nextDouble();
+        scanner.nextLine();
+
+
+
         Vehicle vehicle = Vehicle.builder()
                 .category(category)
                 .brand(brand)
                 .model(model)
                 .year(year)
                 .plate(plate)
-                //.price(price) TODO:dodac tom cene
+                .price(price)
                 .build();
 
         System.out.println("Czy chcesz dodać atrybuty? (tak/nie)");
