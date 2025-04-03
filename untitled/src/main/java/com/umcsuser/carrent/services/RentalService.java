@@ -40,12 +40,14 @@ public class RentalService {
     }
 
     public Rental returnVehicle(Rental rental) {
-        if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
-            throw new IllegalStateException("Vehicle already returned");
-        }
+        // Najpierw pobierz aktualną wersję z bazy danych
         Rental existingRental = rentalRepository.findById(rental.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
+
+        // Ustaw datę zwrotu
         existingRental.setReturnDateTime(LocalDateTime.now().format(formatter));
+
+        // Zaktualizuj rekord
         return rentalRepository.save(existingRental);
     }
 

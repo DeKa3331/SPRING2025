@@ -113,60 +113,53 @@ public class RentalJdbcRepository implements RentalRepository {
 
     @Override
     public Rental save(Rental rental) {
+        String sql;
         if (rental.getId() == null || rental.getId().isBlank()) {
             rental.setId(UUID.randomUUID().toString());
-            return insertNewRental(rental);
+            sql = "INSERT INTO rental (id, vehicle_id, user_id, rent_date, return_date) VALUES (?, ?, ?, ?, ?)";
         } else {
-            return updateExistingRental(rental);
+            sql = "UPDATE rental SET vehicle_id = ?, user_id = ?, rent_date = ?, return_date = ? WHERE id = ?";
         }
-    }
-
-    private Rental insertNewRental(Rental rental) {
-        String sql = "INSERT INTO rental (id, vehicle_id, user_id, rent_date, return_date) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setString(1, rental.getId());
-            stmt.setString(2, rental.getVehicleId());
-            stmt.setString(3, rental.getUserId());
-            stmt.setTimestamp(4, Timestamp.valueOf(rental.getRentDateTime()));
-
-            if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
-                stmt.setTimestamp(5, Timestamp.valueOf(rental.getReturnDateTime()));
+            if (sql.startsWith("INSERT")) {
+                stmt.setString(1, rental.getId());
+                stmt.setString(2, rental.getVehicleId());
+                stmt.setString(3, rental.getUserId());
+                stmt.setTimestamp(4, Timestamp.valueOf(rental.getRentDateTime()));
+                stmt.setTimestamp(5, rental.getReturnDateTime() != null ?
+                        Timestamp.valueOf(rental.getReturnDateTime()) : null);
             } else {
-                stmt.setNull(5, Types.TIMESTAMP);
+                stmt.setString(1, rental.getVehicleId());
+                stmt.setString(2, rental.getUserId());
+                stmt.setTimestamp(3, Timestamp.valueOf(rental.getRentDateTime()));
+                stmt.setTimestamp(4, rental.getReturnDateTime() != null ?
+                        Timestamp.valueOf(rental.getReturnDateTime()) : null);
+                stmt.setString(5, rental.getId());
             }
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error occurred while inserting rental", e);
+            throw new RuntimeException("Error occurred while saving rental", e);
         }
         return rental;
     }
 
-    private Rental updateExistingRental(Rental rental) {
-        String sql = "UPDATE rental SET vehicle_id = ?, user_id = ?, rent_date = ?, return_date = ? WHERE id = ?";
-
-        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setString(1, rental.getVehicleId());
-            stmt.setString(2, rental.getUserId());
-            stmt.setTimestamp(3, Timestamp.valueOf(rental.getRentDateTime()));
-
-            if (rental.getReturnDateTime() != null && !rental.getReturnDateTime().isEmpty()) {
-                stmt.setTimestamp(4, Timestamp.valueOf(rental.getReturnDateTime()));
-            } else {
-                stmt.setNull(4, Types.TIMESTAMP);
-            }
-
-            stmt.setString(5, rental.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error occurred while updating rental", e);
+    private Timestamp convertToTimestamp(String dateTime) {
+        if (dateTime == null || dateTime.isEmpty()) {
+            return null;
         }
-        return rental;
+        try {
+            // Upewnij się, że data jest w poprawnym formacie
+            if (!dateTime.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+                throw new IllegalArgumentException("Invalid date format: " + dateTime);
+            }
+            return Timestamp.valueOf(dateTime);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to convert to timestamp: " + dateTime, e);
+        }
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.umcsuser.carrent.services;
 
+import com.umcsuser.carrent.models.Rental;
 import com.umcsuser.carrent.models.User;
 import com.umcsuser.carrent.models.Vehicle;
 import com.umcsuser.carrent.repositories.VehicleRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class UserService {
@@ -29,13 +31,13 @@ public class UserService {
     }
 
     public void returnVehicle(User currentUser) {
-        if (rentalService.getUserRentals(currentUser.getId()).isEmpty()) {
-            System.out.println("Nie masz wypożyczonego pojazdu.");
-            return;
-        }
-
-        rentalService.getUserRentals(currentUser.getId()).forEach(rentalService::returnVehicle);
-        System.out.println("Pojazd został zwrócony.");
+        List<Rental> userRentals = rentalService.getUserRentals(currentUser.getId());
+        userRentals.stream()
+                .filter(r -> r.getReturnDateTime() == null)
+                .forEach(rental -> {
+                    Rental updatedRental = rentalService.returnVehicle(rental);
+                    System.out.println("Zwrócono pojazd: " + updatedRental);
+                });
     }
 
     public void listAvailableVehicles() {
