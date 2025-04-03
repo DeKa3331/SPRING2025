@@ -7,10 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import com.umcsuser.carrent.utils.JdbcConnectionManager;
 import com.umcsuser.carrent.models.Vehicle;
 import com.umcsuser.carrent.repositories.VehicleRepository;
-import java.sql.*;
-import java.util.*;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class VehicleJdbcRepository implements VehicleRepository {
 
@@ -80,29 +76,76 @@ public class VehicleJdbcRepository implements VehicleRepository {
     @Override
     public Vehicle save(Vehicle vehicle) {
         if (vehicle.getId() == null || vehicle.getId().isBlank()) {
-            vehicle.setId(UUID.randomUUID().toString());
-        } else {
-            deleteById(vehicle.getId());
+            vehicle.setId(generateNextVehicleId());
         }
 
-        String sql = "INSERT INTO vehicle (id, category, brand, model, year, plate, price, attributes) VALUES (?, ?, ?, ?, ?, ?, ?, ?::jsonb)";
+        boolean exists = existsById(vehicle.getId());
+
+        String sql;
+        if (exists) {
+            sql = "UPDATE vehicle SET category = ?, brand = ?, model = ?, year = ?, plate = ?, price = ?, attributes = ?::jsonb WHERE id = ?";
+        } else {
+            sql = "INSERT INTO vehicle (id, category, brand, model, year, plate, price, attributes) VALUES (?, ?, ?, ?, ?, ?, ?, ?::jsonb)";
+        }
+
         try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setString(1, vehicle.getId());
-            stmt.setString(2, vehicle.getCategory());
-            stmt.setString(3, vehicle.getBrand());
-            stmt.setString(4, vehicle.getModel());
-            stmt.setInt(5, vehicle.getYear());
-            stmt.setString(6, vehicle.getPlate());
-            stmt.setDouble(7, vehicle.getPrice());
-            stmt.setString(8, gson.toJson(vehicle.getAttributes()));
+            if (exists) {
+                stmt.setString(1, vehicle.getCategory());
+                stmt.setString(2, vehicle.getBrand());
+                stmt.setString(3, vehicle.getModel());
+                stmt.setInt(4, vehicle.getYear());
+                stmt.setString(5, vehicle.getPlate());
+                stmt.setDouble(6, vehicle.getPrice());
+                stmt.setString(7, gson.toJson(vehicle.getAttributes()));
+                stmt.setString(8, vehicle.getId());
+            } else {
+
+                stmt.setString(1, vehicle.getId());
+                stmt.setString(2, vehicle.getCategory());
+                stmt.setString(3, vehicle.getBrand());
+                stmt.setString(4, vehicle.getModel());
+                stmt.setInt(5, vehicle.getYear());
+                stmt.setString(6, vehicle.getPlate());
+                stmt.setDouble(7, vehicle.getPrice());
+                stmt.setString(8, gson.toJson(vehicle.getAttributes()));
+            }
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error occurred while saving vehicle", e);
         }
         return vehicle;
+    }
+
+    private boolean existsById(String id) {
+        String sql = "SELECT 1 FROM vehicle WHERE id = ?";
+        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if vehicle exists", e);
+        }
+    }
+
+    private String generateNextVehicleId() {
+        String sql = "SELECT COALESCE(MAX(CAST(id AS INTEGER)), 0) + 1 FROM vehicle";
+        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return String.valueOf(rs.getInt(1));
+            }
+            return "1";
+        } catch (SQLException e) {
+            throw new RuntimeException("Error generating next vehicle ID", e);
+        }
     }
 
     @Override

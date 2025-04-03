@@ -10,7 +10,6 @@ import com.umcsuser.carrent.repositories.VehicleRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 
 public class RentalService {
@@ -40,14 +39,9 @@ public class RentalService {
     }
 
     public Rental returnVehicle(Rental rental) {
-        // Najpierw pobierz aktualną wersję z bazy danych
         Rental existingRental = rentalRepository.findById(rental.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Rental not found"));
-
-        // Ustaw datę zwrotu
         existingRental.setReturnDateTime(LocalDateTime.now().format(formatter));
-
-        // Zaktualizuj rekord
         return rentalRepository.save(existingRental);
     }
 

@@ -6,7 +6,6 @@ import com.umcsuser.carrent.utils.JdbcConnectionManager;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class RentalJdbcRepository implements RentalRepository {
 
@@ -145,21 +144,6 @@ public class RentalJdbcRepository implements RentalRepository {
             throw new RuntimeException("Error occurred while saving rental", e);
         }
         return rental;
-    }
-
-    private Timestamp convertToTimestamp(String dateTime) {
-        if (dateTime == null || dateTime.isEmpty()) {
-            return null;
-        }
-        try {
-            // Upewnij się, że data jest w poprawnym formacie
-            if (!dateTime.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
-                throw new IllegalArgumentException("Invalid date format: " + dateTime);
-            }
-            return Timestamp.valueOf(dateTime);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to convert to timestamp: " + dateTime, e);
-        }
     }
 
     @Override
