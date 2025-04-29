@@ -23,7 +23,7 @@ public class Main {
 
 
          */
-        String storageType = "json";
+        String storageType = "jdbc";
 
         UserRepository userRepo;
         VehicleRepository vehicleRepo;

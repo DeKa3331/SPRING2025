@@ -72,7 +72,7 @@ public class App {
 
     private void adminMenu(Scanner scanner) {
         while (true) {
-            System.out.println("ADMIN MENU: 1 - Dodaj pojazd, 2 - Edytuj pojazd, 3 - Wyświetl wynajmy,4-wyswietl pojazdy, 5 - Wyloguj");
+            System.out.println("ADMIN MENU: 1 - Dodaj pojazd, 2 - Edytuj pojazd, 3 - Wyświetl wynajmy, 4 - wyswietl pojazdy, 5 - wyswietl uzytkownikow, 6 - usun pojazd, 7 - Wyloguj");
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -81,7 +81,9 @@ public class App {
                 case 2 -> adminService.editVehicle(scanner);
                 case 3 -> adminService.listAllRentals();
                 case 4 -> adminService.listAllVehicles();
-                case 5 -> {
+                case 5 -> adminService.listUsers();
+                case 6 -> adminService.deleteVehicle();
+                case 7 -> {
                     System.out.println("Wylogowano.");
                     return;
                 }

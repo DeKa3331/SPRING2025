@@ -153,6 +153,45 @@ public class AdminService {
         System.out.println("Lista wszystkich pojazdów:");
         vehicleRepo.findAll().forEach(vehicle -> System.out.println(vehicle));
     }
+    public void listUsers()
+    {
+        System.out.println("Lista wszystki uzytkownikow:");
+        userRepo.findAll().forEach(user -> System.out.println(user));
+    }
+    public void deleteVehicle() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj ID pojazdu do usunięcia:");
+        String id = scanner.nextLine();
+
+        Optional<Vehicle> vehicleOpt = vehicleRepo.findById(id);
+        if (vehicleOpt.isEmpty()) {
+            System.out.println("Pojazd o podanym ID nie istnieje.");
+            return;
+        }
+
+        Vehicle vehicle = vehicleOpt.get();
+
+        boolean isRented = rentalRepo.findAll().stream()
+                .anyMatch(rental -> rental.getVehicleId().equals(vehicle.getId()) &&
+                        (rental.getReturnDateTime() == null || rental.getReturnDateTime().isEmpty()));
+
+        if (isRented) {
+            System.out.println("Nie można usunąć pojazdu, ponieważ jest on aktualnie wypożyczony.");
+            return;
+        }
+
+        System.out.println("Czy na pewno chcesz usunąć pojazd? (tak/nie)");
+        String confirmation = scanner.nextLine();
+        if (!confirmation.equalsIgnoreCase("tak")) {
+            System.out.println("Anulowano usunięcie pojazdu.");
+            return;
+        }
+
+        vehicleRepo.deleteById(id);
+        System.out.println("Pojazd został pomyślnie usunięty.");
+    }
+
+
 
 
 }
