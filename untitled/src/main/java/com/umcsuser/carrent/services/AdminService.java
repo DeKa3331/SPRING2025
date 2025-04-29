@@ -138,4 +138,11 @@ public void editVehicle(Scanner scanner) {
     public void listAllRentals() {
         rentalRepo.findAll().forEach(System.out::println);
     }
+
+    public void listAllVehicles() {
+        System.out.println("Lista wszystkich pojazdów:");
+        vehicleRepo.findAll().forEach(vehicle -> System.out.println(vehicle));
+    }
+
+
 }
