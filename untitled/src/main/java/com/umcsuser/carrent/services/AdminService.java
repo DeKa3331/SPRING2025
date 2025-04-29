@@ -70,7 +70,7 @@ public class AdminService {
 
 
 
-public void editVehicle(Scanner scanner) {
+    public void editVehicle(Scanner scanner) {
         System.out.println("Podaj ID pojazdu do edycji:");
         String id = scanner.nextLine();
 
@@ -83,29 +83,38 @@ public void editVehicle(Scanner scanner) {
         Vehicle vehicle = vehicleOpt.get();
 
         System.out.println("Co chcesz zmienić?");
-        System.out.println("1 - Marka, 2 - Model, 3 - Rok, 4 - Numer rejestracyjny, 5 - Atrybuty");
+        System.out.println("1 - Kategoria, 2 - Marka, 3 - Model, 4 - Rok, 5 - Numer rejestracyjny, 6 - Cena, 7 - Atrybuty");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
             case 1:
+                System.out.println("Nowa kategoria:");
+                vehicle.setCategory(scanner.nextLine());
+                break;
+            case 2:
                 System.out.println("Nowa marka:");
                 vehicle.setBrand(scanner.nextLine());
                 break;
-            case 2:
+            case 3:
                 System.out.println("Nowy model:");
                 vehicle.setModel(scanner.nextLine());
                 break;
-            case 3:
+            case 4:
                 System.out.println("Nowy rok:");
                 vehicle.setYear(scanner.nextInt());
                 scanner.nextLine();
                 break;
-            case 4:
+            case 5:
                 System.out.println("Nowy numer rejestracyjny:");
                 vehicle.setPlate(scanner.nextLine());
                 break;
-            case 5:
+            case 6:
+                System.out.println("Nowa cena:");
+                vehicle.setPrice(scanner.nextDouble());
+                scanner.nextLine();
+                break;
+            case 7:
                 editAttributes(vehicle, scanner);
                 break;
             default:
@@ -115,6 +124,7 @@ public void editVehicle(Scanner scanner) {
         vehicleRepo.save(vehicle);
         System.out.println("Pojazd zaktualizowany!");
     }
+
 
     private void editAttributes(Vehicle vehicle, Scanner scanner) {
         System.out.println("Aktualne atrybuty: " + vehicle.getAttributes());
